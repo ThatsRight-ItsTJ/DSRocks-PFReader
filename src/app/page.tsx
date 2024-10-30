@@ -85,7 +85,7 @@ export default function Home() {
     if (completion && completion !== modifiedText) {
       setModifiedText(completion);
     }
-  }, [completion]);
+  }, [completion, modifiedText, setModifiedText]);
 
   useEffect(() => {
     if (editorRef.current) {

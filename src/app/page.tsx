@@ -2,7 +2,7 @@
 
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useCompletion } from "ai/react";
 import { Button, NextUIProvider, Select, SelectItem } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
@@ -29,27 +29,49 @@ export default function Home() {
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
-    editor.getOriginalEditor().onDidChangeModelContent((event) => {
-      setOriginalText(editor.getOriginalEditor().getValue());
-    });
-    editor.getModifiedEditor().onDidChangeModelContent((event) => {
-      setModifiedText(editor.getModifiedEditor().getValue());
-    });
+
+    const handleOriginalContentChange = () => {
+      const value = editor.getOriginalEditor().getValue();
+      if (value !== originalText) {
+        setOriginalText(value);
+      }
+    };
+
+    const handleModifiedContentChange = () => {
+      const value = editor.getModifiedEditor().getValue();
+      if (value !== modifiedText) {
+        setModifiedText(value);
+      }
+    };
+
+    editor
+      .getOriginalEditor()
+      .onDidChangeModelContent(handleOriginalContentChange);
+    editor
+      .getModifiedEditor()
+      .onDidChangeModelContent(handleModifiedContentChange);
   };
 
-  const { completion, complete } = useCompletion({
-    initialCompletion: modifiedText,
-  });
-  setModifiedText(completion);
+  const { completion, complete } = useCompletion();
+
+  useEffect(() => {
+    if (completion && completion !== modifiedText) {
+      setModifiedText(completion);
+    }
+  }, [completion]);
 
   const handleProofread = async () => {
     const editor = editorRef.current;
     if (editor) {
-      await complete(instruction + ":\n" + originalText, {
-        body: {
-          model: model,
-        },
-      });
+      try {
+        await complete(instruction + ":\n" + originalText, {
+          body: {
+            model: model,
+          },
+        });
+      } catch (error) {
+        console.error("Proofreading failed:", error);
+      }
     }
   };
 
@@ -114,7 +136,7 @@ export default function Home() {
             label="Select a model"
             selectedKeys={[model]}
             onSelectionChange={(keys) =>
-              keys.currentKey && setModel(keys.currentKey)
+              keys && setModel(keys.currentKey as string)
             }
             className="max-w-64"
           >
@@ -126,7 +148,7 @@ export default function Home() {
             label="Select a context"
             selectedKeys={[context]}
             onSelectionChange={(keys) =>
-              keys.currentKey && setContext(keys.currentKey)
+              keys && setContext(keys.currentKey as string)
             }
             className="max-w-36"
           >
@@ -138,7 +160,7 @@ export default function Home() {
             label="Select an instruction"
             selectedKeys={[instruction]}
             onSelectionChange={(keys) =>
-              keys.currentKey && setInstruction(keys.currentKey)
+              keys && setInstruction(keys.currentKey as string)
             }
             className="max-w-md"
           >

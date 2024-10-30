@@ -1,9 +1,8 @@
 "use client";
 
-import { debounce } from "lodash";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect } from "react";
 import { useCompletion } from "ai/react";
 import { Button, NextUIProvider, Select, SelectItem } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
@@ -25,21 +24,14 @@ const textModifiedEditorAtom = atomWithStorage<string | undefined>(
 export default function Home() {
   const editorRef = useRef<MonacoDiffEditor | null>(null);
   const isInitializing = useRef(true);
+  const isUpdatingOriginalText = useRef(false);
+  const isUpdatingModifiedText = useRef(false);
+
   const [model, setModel] = useAtom(modelAtom);
   const [context, setContext] = useAtom(contextAtom);
   const [instruction, setInstruction] = useAtom(instructionAtom);
   const [originalText, setOriginalText] = useAtom(textOriginalEditorAtom);
   const [modifiedText, setModifiedText] = useAtom(textModifiedEditorAtom);
-
-  const debouncedSetOriginalText = useMemo(
-    () => debounce(setOriginalText, 300),
-    [setOriginalText]
-  );
-
-  const debouncedSetModifiedText = useMemo(
-    () => debounce(setModifiedText, 300),
-    [setModifiedText]
-  );
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
@@ -55,18 +47,24 @@ export default function Home() {
       ?.setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
-      if (isInitializing.current) return;
+      if (isInitializing.current || isUpdatingOriginalText.current) {
+        isUpdatingOriginalText.current = false;
+        return;
+      }
       const value = editor.getOriginalEditor().getValue();
       if (value !== originalText) {
-        debouncedSetOriginalText(value);
+        setOriginalText(value);
       }
     };
 
     const handleModifiedContentChange = () => {
-      if (isInitializing.current) return;
+      if (isInitializing.current || isUpdatingModifiedText.current) {
+        isUpdatingModifiedText.current = false;
+        return;
+      }
       const value = editor.getModifiedEditor().getValue();
       if (value !== modifiedText) {
-        debouncedSetModifiedText(value);
+        setModifiedText(value);
       }
     };
 
@@ -87,13 +85,14 @@ export default function Home() {
     if (completion && completion !== modifiedText) {
       setModifiedText(completion);
     }
-  }, [completion, modifiedText, setModifiedText]);
+  }, [completion]);
 
   useEffect(() => {
     if (editorRef.current) {
       const editor = editorRef.current;
       const currentOriginalValue = editor.getOriginalEditor().getValue();
       if (originalText !== currentOriginalValue) {
+        isUpdatingOriginalText.current = true;
         editor
           .getOriginalEditor()
           .getModel()
@@ -107,6 +106,7 @@ export default function Home() {
       const editor = editorRef.current;
       const currentModifiedValue = editor.getModifiedEditor().getValue();
       if (modifiedText !== currentModifiedValue) {
+        isUpdatingModifiedText.current = true;
         editor
           .getModifiedEditor()
           .getModel()

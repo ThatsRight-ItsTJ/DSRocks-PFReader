@@ -12,13 +12,13 @@ import { models, contexts, instructions } from "@/lib/prompt";
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
 const instructionAtom = atomWithStorage("instruction", "basicProofread");
-const textOriginalEditorAtom = atomWithStorage<string | null>(
+const textOriginalEditorAtom = atomWithStorage<string | undefined>(
   "textOriginalEditor",
-  null
+  undefined
 );
-const textModifiedEditorAtom = atomWithStorage<string | null>(
+const textModifiedEditorAtom = atomWithStorage<string | undefined>(
   "textModifiedEditor",
-  null
+  undefined
 );
 
 export default function Home() {

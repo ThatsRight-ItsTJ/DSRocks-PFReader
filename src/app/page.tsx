@@ -1,75 +1,26 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Change,
-  createTwoFilesPatch,
-  diffChars,
-  diffWords,
-  diffLines,
-} from "diff";
-
-interface ChangeWithChunkHeader extends Change {
-  chunkHeader: boolean;
-}
+import { Change, diffChars, diffWords, diffLines } from "diff";
 
 export default function Home() {
   const [diffType, setDiffType] = useState("diffChars");
   const [textA, setTextA] = useState("restaurant");
   const [textB, setTextB] = useState("aura");
-  const [diffResult, setDiffResult] = useState<ChangeWithChunkHeader[]>([]);
+  const [diffResult, setDiffResult] = useState<Change[]>([]);
 
   useEffect(() => {
     computeDiff();
   }, [textA, textB, diffType]);
 
   const computeDiff = () => {
-    let diff: ChangeWithChunkHeader[];
-    if (diffType === "diffPatch") {
-      let pastHunkHeader = false;
-      const patch = createTwoFilesPatch("a.txt", "b.txt", textA, textB)
-        .split("\n")
-        .map((entry) => {
-          const result = {
-            value: entry + "\n",
-            chunkHeader: false,
-            removed: false,
-            added: false,
-          };
-          if (entry.startsWith("@@")) {
-            result.chunkHeader = true;
-            pastHunkHeader = true;
-          } else if (pastHunkHeader) {
-            if (entry.startsWith("-")) {
-              result.removed = true;
-            } else if (entry.startsWith("+")) {
-              result.added = true;
-            }
-          }
-          return result;
-        });
-      diff = patch;
-    } else if (diffType === "diffChars") {
-      diff = diffChars(textA, textB).map((entry) => {
-        return {
-          ...entry,
-          chunkHeader: false,
-        };
-      });
+    let diff: Change[];
+    if (diffType === "diffChars") {
+      diff = diffChars(textA, textB);
     } else if (diffType === "diffWords") {
-      diff = diffWords(textA, textB).map((entry) => {
-        return {
-          ...entry,
-          chunkHeader: false,
-        };
-      });
+      diff = diffWords(textA, textB);
     } else {
-      diff = diffLines(textA, textB).map((entry) => {
-        return {
-          ...entry,
-          chunkHeader: false,
-        };
-      });
+      diff = diffLines(textA, textB);
     }
 
     // Swap logic
@@ -90,8 +41,7 @@ export default function Home() {
 
   return (
     <div>
-      <div id="settings">
-        <h1>Diff</h1>
+      <div>
         <label>
           <input
             type="radio"
@@ -118,16 +68,6 @@ export default function Home() {
             onChange={handleDiffTypeChange}
           />
           Lines
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="diff_type"
-            value="diffPatch"
-            checked={diffType === "diffPatch"}
-            onChange={handleDiffTypeChange}
-          />
-          Patch
         </label>
       </div>
 
@@ -159,12 +99,6 @@ export default function Home() {
                       return <del key={index}>{part.value}</del>;
                     } else if (part.added) {
                       return <ins key={index}>{part.value}</ins>;
-                    } else if (part.chunkHeader) {
-                      return (
-                        <span key={index} className="chunk-header">
-                          {part.value}
-                        </span>
-                      );
                     } else {
                       return <span key={index}>{part.value}</span>;
                     }

@@ -5,13 +5,10 @@ import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useRef, useEffect, useMemo } from "react";
 import { useCompletion } from "ai/react";
-import {
-  Button,
-  NextUIProvider,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Button, NextUIProvider, Select, SelectItem } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
+
+import { models, contexts, instructions } from "@/lib/prompt";
 
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
@@ -48,8 +45,14 @@ export default function Home() {
     editorRef.current = editor;
 
     // Set the initial content for the editors
-    editor.getOriginalEditor().getModel()?.setValue(originalText || "");
-    editor.getModifiedEditor().getModel()?.setValue(modifiedText || "");
+    editor
+      .getOriginalEditor()
+      .getModel()
+      ?.setValue(originalText || "");
+    editor
+      .getModifiedEditor()
+      .getModel()
+      ?.setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
       if (isInitializing.current) return;
@@ -91,7 +94,10 @@ export default function Home() {
       const editor = editorRef.current;
       const currentOriginalValue = editor.getOriginalEditor().getValue();
       if (originalText !== currentOriginalValue) {
-        editor.getOriginalEditor().getModel()?.setValue(originalText || "");
+        editor
+          .getOriginalEditor()
+          .getModel()
+          ?.setValue(originalText || "");
       }
     }
   }, [originalText]);
@@ -101,7 +107,10 @@ export default function Home() {
       const editor = editorRef.current;
       const currentModifiedValue = editor.getModifiedEditor().getValue();
       if (modifiedText !== currentModifiedValue) {
-        editor.getModifiedEditor().getModel()?.setValue(modifiedText || "");
+        editor
+          .getModifiedEditor()
+          .getModel()
+          ?.setValue(modifiedText || "");
       }
     }
   }, [modifiedText]);
@@ -109,9 +118,11 @@ export default function Home() {
   const handleProofread = async () => {
     if (editorRef.current) {
       try {
-        await complete(instruction + ":\n" + originalText, {
+        await complete(originalText || "", {
           body: {
             model: model,
+            context: context,
+            instruction: instruction,
           },
         });
       } catch (error) {
@@ -119,59 +130,6 @@ export default function Home() {
       }
     }
   };
-
-  const models = [
-    "anthropic/claude-3.5-sonnet",
-    "anthropic/claude-3-opus",
-    "openai/chatgpt-4o-latest",
-    "openai/gpt-4",
-  ];
-
-  const contexts = [
-    { key: "academic", label: "Academic" },
-    { key: "chat", label: "Chat" },
-    { key: "email", label: "Email" },
-    { key: "oral", label: "Oral" },
-  ];
-
-  const instructions = [
-    {
-      key: "basicProofread",
-      description: "最基本的校稿指令",
-      prompt: "Proofread this text",
-    },
-    {
-      key: "awkwardParts",
-      description:
-        "仅作些许编辑, 修正非英语母语人士常犯的错误, 包括用词、语法和逻辑",
-      prompt: "Fix only awkward parts",
-    },
-    {
-      key: "streamline",
-      description: "精简和梳理不通顺之处, 使整体内容更清晰",
-      prompt: "Streamline any awkward words or phrases",
-    },
-    {
-      key: "polish",
-      description: "更积极地编辑和润饰, 修改程度更高",
-      prompt: "Polish any awkward words or phrases",
-    },
-    {
-      key: "trim",
-      description: "如果文本太过冗长",
-      prompt: "Trim the fat",
-    },
-    {
-      key: "clarityAndFlow",
-      description: "提高清晰度和流畅性",
-      prompt: "Improve clarity and flow",
-    },
-    {
-      key: "significantClarityAndFlow",
-      description: "显著提高清晰度和流畅性",
-      prompt: "Significantly improving clarity and flow",
-    },
-  ];
 
   // Wait until originalText and modifiedText are loaded from storage
   if (originalText === undefined || modifiedText === undefined) {
@@ -215,10 +173,7 @@ export default function Home() {
             className="max-w-md"
           >
             {instructions.map((instruction) => (
-              <SelectItem
-                key={instruction.key}
-                description={instruction.description}
-              >
+              <SelectItem key={instruction.key}>
                 {instruction.prompt}
               </SelectItem>
             ))}

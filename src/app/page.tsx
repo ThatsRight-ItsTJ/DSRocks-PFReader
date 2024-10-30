@@ -1,8 +1,9 @@
 "use client";
 
+import { debounce } from "lodash";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { useCompletion } from "ai/react";
 import { Button, NextUIProvider, Select, SelectItem } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
@@ -27,20 +28,38 @@ export default function Home() {
   const [originalText, setOriginalText] = useAtom(textOriginalEditorAtom);
   const [modifiedText, setModifiedText] = useAtom(textModifiedEditorAtom);
 
+  const debouncedSetOriginalText = useCallback(
+    debounce((value: string) => {
+      setOriginalText(value);
+    }, 300),
+    []
+  );
+
+  const debouncedSetModifiedText = useCallback(
+    debounce((value: string) => {
+      setModifiedText(value);
+    }, 300),
+    []
+  );
+
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
+
+    // Set the initial content for the editors
+    editor.getOriginalEditor().getModel()?.setValue(originalText);
+    editor.getModifiedEditor().getModel()?.setValue(modifiedText);
 
     const handleOriginalContentChange = () => {
       const value = editor.getOriginalEditor().getValue();
       if (value !== originalText) {
-        setOriginalText(value);
+        debouncedSetOriginalText(value);
       }
     };
 
     const handleModifiedContentChange = () => {
       const value = editor.getModifiedEditor().getValue();
       if (value !== modifiedText) {
-        setModifiedText(value);
+        debouncedSetModifiedText(value);
       }
     };
 
@@ -56,7 +75,10 @@ export default function Home() {
 
   useEffect(() => {
     if (completion && completion !== modifiedText) {
-      setModifiedText(completion);
+      // setModifiedText(completion);
+      if (editorRef.current) {
+        editorRef.current.getModifiedEditor().getModel()?.setValue(completion);
+      }
     }
   }, [completion]);
 
@@ -179,8 +201,6 @@ export default function Home() {
           className="h-full mt-4"
           language="plaintext"
           options={{ originalEditable: true, wordWrap: "on" }}
-          original={originalText}
-          modified={modifiedText}
           onMount={handleEditorDidMount}
         />
       </div>

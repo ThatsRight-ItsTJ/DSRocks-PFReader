@@ -3,53 +3,56 @@
 import { debounce } from "lodash";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useCompletion } from "ai/react";
-import { Button, NextUIProvider, Select, SelectItem } from "@nextui-org/react";
+import {
+  Button,
+  NextUIProvider,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
 const instructionAtom = atomWithStorage("instruction", "basicProofread");
-const textOriginalEditorAtom = atomWithStorage(
+const textOriginalEditorAtom = atomWithStorage<string | undefined>(
   "textOriginalEditor",
-  "the original text"
+  undefined
 );
-const textModifiedEditorAtom = atomWithStorage(
+const textModifiedEditorAtom = atomWithStorage<string | undefined>(
   "textModifiedEditor",
-  "the modified text"
+  undefined
 );
 
 export default function Home() {
   const editorRef = useRef<MonacoDiffEditor | null>(null);
+  const isInitializing = useRef(true);
   const [model, setModel] = useAtom(modelAtom);
   const [context, setContext] = useAtom(contextAtom);
   const [instruction, setInstruction] = useAtom(instructionAtom);
   const [originalText, setOriginalText] = useAtom(textOriginalEditorAtom);
   const [modifiedText, setModifiedText] = useAtom(textModifiedEditorAtom);
 
-  const debouncedSetOriginalText = useCallback(
-    debounce((value: string) => {
-      setOriginalText(value);
-    }, 300),
-    []
+  const debouncedSetOriginalText = useMemo(
+    () => debounce(setOriginalText, 300),
+    [setOriginalText]
   );
 
-  const debouncedSetModifiedText = useCallback(
-    debounce((value: string) => {
-      setModifiedText(value);
-    }, 300),
-    []
+  const debouncedSetModifiedText = useMemo(
+    () => debounce(setModifiedText, 300),
+    [setModifiedText]
   );
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
 
     // Set the initial content for the editors
-    editor.getOriginalEditor().getModel()?.setValue(originalText);
-    editor.getModifiedEditor().getModel()?.setValue(modifiedText);
+    editor.getOriginalEditor().getModel()?.setValue(originalText || "");
+    editor.getModifiedEditor().getModel()?.setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
+      if (isInitializing.current) return;
       const value = editor.getOriginalEditor().getValue();
       if (value !== originalText) {
         debouncedSetOriginalText(value);
@@ -57,6 +60,7 @@ export default function Home() {
     };
 
     const handleModifiedContentChange = () => {
+      if (isInitializing.current) return;
       const value = editor.getModifiedEditor().getValue();
       if (value !== modifiedText) {
         debouncedSetModifiedText(value);
@@ -69,22 +73,41 @@ export default function Home() {
     editor
       .getModifiedEditor()
       .onDidChangeModelContent(handleModifiedContentChange);
+
+    // Set isInitializing to false after initial setup
+    isInitializing.current = false;
   };
 
   const { completion, complete } = useCompletion();
 
   useEffect(() => {
     if (completion && completion !== modifiedText) {
-      // setModifiedText(completion);
-      if (editorRef.current) {
-        editorRef.current.getModifiedEditor().getModel()?.setValue(completion);
+      setModifiedText(completion);
+    }
+  }, [completion, modifiedText, setModifiedText]);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      const currentOriginalValue = editor.getOriginalEditor().getValue();
+      if (originalText !== currentOriginalValue) {
+        editor.getOriginalEditor().getModel()?.setValue(originalText || "");
       }
     }
-  }, [completion]);
+  }, [originalText]);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      const currentModifiedValue = editor.getModifiedEditor().getValue();
+      if (modifiedText !== currentModifiedValue) {
+        editor.getModifiedEditor().getModel()?.setValue(modifiedText || "");
+      }
+    }
+  }, [modifiedText]);
 
   const handleProofread = async () => {
-    const editor = editorRef.current;
-    if (editor) {
+    if (editorRef.current) {
       try {
         await complete(instruction + ":\n" + originalText, {
           body: {
@@ -149,6 +172,11 @@ export default function Home() {
       prompt: "Significantly improving clarity and flow",
     },
   ];
+
+  // Wait until originalText and modifiedText are loaded from storage
+  if (originalText === undefined || modifiedText === undefined) {
+    return null; // or a loading indicator
+  }
 
   return (
     <NextUIProvider>

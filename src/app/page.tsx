@@ -193,7 +193,7 @@ export default function Home() {
                     onSelectionChange={(keys) =>
                       keys && setContext(keys.currentKey as string)
                     }
-                    className="max-w-36"
+                    className="max-w-40"
                   >
                     {contexts.map((context) => (
                       <SelectItem key={context.key}>{context.label}</SelectItem>

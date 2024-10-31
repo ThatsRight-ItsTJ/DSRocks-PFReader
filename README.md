@@ -2,6 +2,10 @@
 
 Waner Proofreader is an AI-powered tool designed to help non-native English speakers proofread their text effectively. Named after the historical figure 上官婉儿 (Shangguan Wan'er), a renowned Chinese poet and politician, this project aims to provide a smooth proofreading experience.
 
+# Screenshots
+
+![Waner Proofreader Screenshot](./screenshot.png)
+
 # Installation
 
 To run Waner Proofreader locally, ensure that you have Node.js installed on your machine. Follow these steps to set up the project:
@@ -41,7 +45,3 @@ To run Waner Proofreader locally, ensure that you have Node.js installed on your
    ```
 
 6. Open your web browser and visit `http://localhost:3000` to access Waner Proofreader.
-
-# Screenshots
-
-![Waner Proofreader Screenshot](./screenshot.png)

@@ -108,37 +108,9 @@ export default function Home() {
 
   useEffect(() => {
     if (completion && completion !== modifiedText) {
-      setModifiedText(completion);
+      editorRef.current?.getModifiedEditor().setValue(completion);
     }
   }, [completion, modifiedText, setModifiedText]);
-
-  useEffect(() => {
-    if (editorRef.current) {
-      const editor = editorRef.current;
-      const currentOriginalValue = editor.getOriginalEditor().getValue();
-      if (originalText !== currentOriginalValue) {
-        isUpdatingOriginalText.current = true;
-        editor
-          .getOriginalEditor()
-          .getModel()
-          ?.setValue(originalText || "");
-      }
-    }
-  }, [originalText]);
-
-  useEffect(() => {
-    if (editorRef.current) {
-      const editor = editorRef.current;
-      const currentModifiedValue = editor.getModifiedEditor().getValue();
-      if (modifiedText !== currentModifiedValue) {
-        isUpdatingModifiedText.current = true;
-        editor
-          .getModifiedEditor()
-          .getModel()
-          ?.setValue(modifiedText || "");
-      }
-    }
-  }, [modifiedText]);
 
   const handleProofread = async () => {
     if (editorRef.current) {

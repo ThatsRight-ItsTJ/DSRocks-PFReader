@@ -36,9 +36,10 @@ To run Waner Proofreader locally, ensure that you have Node.js installed on your
    NEXT_URL=http://localhost:3000
    OPENAI_BASE_URL=https://openrouter.ai/api/v1
    OPENAI_API_KEY=<your_openrouter_api_key>
+   NEXT_PUBLIC_OPENAI_MODEL=anthropic/claude-3.5-sonnet,anthropic/claude-3-opus,openai/chatgpt-4o-latest,openai/gpt-4
    ```
 
-   Replace `<your_openrouter_api_key>` with your actual OpenRouter API key, which you can obtain by signing up at [OpenRouter](https://openrouter.ai/). If you want to use other providers, you may need to modify models in `src/lib/prompt.ts` accordingly.
+   Replace `<your_openrouter_api_key>` with your actual OpenRouter API key, which you can obtain by signing up at [OpenRouter](https://openrouter.ai/). If you want to use other providers, you may need to modify`NEXT_PUBLIC_OPENAI_MODEL` accordingly.
 
 5. Start the development server:
 

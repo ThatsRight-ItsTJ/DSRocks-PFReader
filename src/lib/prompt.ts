@@ -1,9 +1,4 @@
-export const models = [
-  "anthropic/claude-3.5-sonnet",
-  "anthropic/claude-3-opus",
-  "openai/chatgpt-4o-latest",
-  "openai/gpt-4",
-];
+export const models = process.env.NEXT_PUBLIC_OPENAI_MODEL?.split(",") as string[];
 
 export const contexts = [
   { key: "academic", label: "Academic" },

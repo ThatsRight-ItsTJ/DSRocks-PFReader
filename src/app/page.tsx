@@ -27,9 +27,9 @@ import {
 } from "@/lib/prompt";
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
-const contextAtom = atomWithStorage("modelContext", "academic");
-const instructionAtom = atomWithStorage("instruction", "basicProofread");
+const modelAtom = atomWithStorage("model", models[0]);
+const contextAtom = atomWithStorage("modelContext", contexts[0].key);
+const instructionAtom = atomWithStorage("instruction", instructions[0].key);
 const textOriginalEditorAtom = atomWithStorage<string | undefined>(
   "textOriginalEditor",
   undefined
@@ -56,6 +56,21 @@ export default function HomePage() {
   const [originalText, setOriginalText] = useAtom(textOriginalEditorAtom);
   const [modifiedText, setModifiedText] = useAtom(textModifiedEditorAtom);
   const [leftHeaderWidth, setLeftHeaderWidth] = useAtom(leftHeaderWidthAtom);
+
+  // model must be one of the available models
+  if (!models.includes(model)) {
+    setModel(models[0]);
+  }
+
+  // context must be one of the available contexts
+  if (!contexts.some((c) => c.key === context)) {
+    setContext(contexts[0].key);
+  }
+
+  // instruction must be one of the available instructions
+  if (!instructions.some((i) => i.key === instruction)) {
+    setInstruction(instructions[0].key);
+  }
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;

@@ -5,18 +5,10 @@ import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useCompletion } from "ai/react";
 import { useTheme } from "next-themes";
-import {
-  Button,
-  Select,
-  SelectItem,
-  Card,
-  CardBody,
-  Tooltip,
-  Link,
-} from "@nextui-org/react";
+import { Select, SelectItem, Card, CardBody, Link } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 
-import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/icons";
+import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/Icon";
 
 import {
   models,
@@ -26,6 +18,7 @@ import {
 } from "@/lib/prompt";
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import IconButton from "@/components/IconButton";
 const modelAtom = atomWithStorage("model", models[0]);
 const contextAtom = atomWithStorage("modelContext", contexts[0].key);
 const instructionAtom = atomWithStorage("instruction", instructions[0].key);
@@ -171,40 +164,29 @@ export default function HomePage() {
                   </Select>
                 </div>
                 <div className="flex gap-2">
-                  <Tooltip content="GitHub repository" closeDelay={0}>
-                    <Button
-                      className="h-12 w-12"
-                      as={Link}
-                      isIconOnly
-                      href="https://github.com/AuroraDysis/waner-proofreader"
-                      isExternal
-                    >
-                      <GithubIcon className="dark:invert h-7 w-7" />
-                    </Button>
-                  </Tooltip>
+                  <IconButton
+                    tooltip="GitHub repository"
+                    icon={<GithubIcon className="dark:invert h-7 w-7" />}
+                    as={Link}
+                    isIconOnly
+                    href="https://github.com/AuroraDysis/waner-proofreader"
+                    isExternal
+                  />
                   <ThemeSwitcher />
-                  <Tooltip
-                    content={
+                  <IconButton
+                    tooltip={
                       <div className="max-w-md">
                         {generate_system_prompt(context, instruction)}
                       </div>
                     }
-                    closeDelay={0}
-                  >
-                    <Button className="h-12 w-12" isIconOnly>
-                      <LightbulbIcon className="dark:invert h-7 w-7" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip content="Proofread" closeDelay={0}>
-                    <Button
-                      className="h-12 w-12"
-                      isIconOnly
-                      onPress={() => handleProofread()}
-                      isLoading={isLoading}
-                    >
-                      <EditIcon className="dark:invert h-7 w-7" />
-                    </Button>
-                  </Tooltip>
+                    icon={<LightbulbIcon className="dark:invert h-7 w-7" />}
+                  />
+                  <IconButton
+                    tooltip="Proofread"
+                    icon={<EditIcon className="dark:invert h-7 w-7" />}
+                    isLoading={isLoading}
+                    onPress={() => handleProofread()}
+                  />
                 </div>
               </div>
               <div className="flex items-center mb-4">
@@ -212,7 +194,7 @@ export default function HomePage() {
                   className="flex justify-center"
                   style={{
                     width: `${
-                      leftHeaderWidth !== undefined ? leftHeaderWidth - 14 : 0
+                      leftHeaderWidth ? leftHeaderWidth - 14 : "50%"
                     }px`,
                   }}
                 >

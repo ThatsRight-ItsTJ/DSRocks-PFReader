@@ -1,46 +1,33 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMonaco } from "@monaco-editor/react";
-import { Button, Tooltip } from "@nextui-org/react";
-import { LightModeIcon, DarkModeIcon } from "@/components/icons";
+import { LightModeIcon, DarkModeIcon } from "@/components/Icon";
+import IconButton from "@/components/IconButton";
 
 export function ThemeSwitcher() {
-  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const monaco = useMonaco();
 
   useEffect(() => {
-    if (monaco && mounted) {
+    if (monaco) {
       monaco.editor.setTheme(theme === "dark" ? "vs-dark" : "vs");
     }
-  }, [monaco, mounted, theme]);
-
-  if (!mounted) return null;
+  }, [monaco, theme]);
 
   return (
-    <Tooltip content="Toggle Theme">
-      <Button
-        isIconOnly
-        className="h-12 w-12"
-        onPress={() => setTheme(theme === "dark" ? "light" : "dark")}
-      >
-        {mounted && theme === "dark" ? (
-          <div>
-            <DarkModeIcon className="h-7 w-7 dark:invert" />
-          </div>
+    <IconButton
+      tooltip="Toggle Theme"
+      icon={
+        theme === "dark" ? (
+          <DarkModeIcon className="dark:invert h-7 w-7" />
         ) : (
-          <div>
-            <LightModeIcon className="h-7 w-7 dark:invert" />
-          </div>
-        )}
-      </Button>
-    </Tooltip>
+          <LightModeIcon className="dark:invert h-7 w-7" />
+        )
+      }
+      onPress={() => setTheme(theme === "dark" ? "light" : "dark")}
+    />
   );
 }

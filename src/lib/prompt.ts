@@ -1,10 +1,13 @@
-export const models = process.env.NEXT_PUBLIC_OPENAI_MODEL?.split(",") as string[];
+export const models = process.env.NEXT_PUBLIC_OPENAI_MODEL?.split(
+  ","
+) as string[];
 
 export const contexts = [
   { key: "academic", label: "Academic" },
   { key: "instantMessage", label: "Instant Message" },
   { key: "email", label: "Email" },
   { key: "oral", label: "Oral" },
+  { key: "gitCommitMessage", label: "Git Commit Message" },
 ];
 
 export const instructions = [
@@ -71,6 +74,10 @@ export function generate_system_prompt(
     case "oral":
       styleGuidelines =
         "Use language that would sound natural when spoken aloud. Avoid complex sentence structures.";
+      break;
+    case "gitCommitMessage":
+      styleGuidelines =
+        "Treat provided text as a git commit message. Ensure it's formatted with a short summary line, followed by a blank line, followed by a more detailed description. Ensure that the summary line is less than 50 characters. Ensure that the lines in the description are less than 72 characters. Avoid using past tense, and use the imperative mood instead.";
       break;
     default:
       styleGuidelines = "";

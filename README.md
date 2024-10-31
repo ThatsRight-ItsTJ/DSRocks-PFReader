@@ -48,3 +48,11 @@ To run Waner Proofreader locally, ensure that you have Node.js installed on your
    ```
 
 6. Open your web browser and visit `http://localhost:3000` to access Waner Proofreader.
+
+# Credits
+
+- Some parts of the code & prompts are inspired by [refiner](https://github.com/imankulov/refiner)
+
+# Licenses
+
+waner-proofreader is licensed under the MIT License. See [LICENSE](./LICENSE) for more information.

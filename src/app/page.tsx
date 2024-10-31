@@ -16,7 +16,7 @@ import {
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 
 import infoSvg from "@material-design-icons/svg/filled/info.svg";
-import sendSvg from "@material-design-icons/svg/filled/send.svg";
+import editSvg from "@material-design-icons/svg/filled/edit.svg";
 import Image from "next/image";
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -224,25 +224,28 @@ export default function Home() {
                     }
                     closeDelay={0}
                   >
-                    <Button isIconOnly>
+                    <Button className="h-12 w-12" isIconOnly>
                       <Image
                         src={infoSvg}
                         alt="Info icon"
-                        width={24}
-                        height={24}
-                        className="dark:invert"
+                        className="dark:invert h-7 w-7"
                       />
                     </Button>
                   </Tooltip>
-                  <Button isIconOnly onPress={() => handleProofread()} isLoading={isLoading}>
-                    <Image
-                      src={sendSvg}
-                      alt="Send icon"
-                      width={24}
-                      height={24}
-                      className="dark:invert"
-                    />
-                  </Button>
+                  <Tooltip content="Proofread" closeDelay={0}>
+                    <Button
+                      className="h-12 w-12"
+                      isIconOnly
+                      onPress={() => handleProofread()}
+                      isLoading={isLoading}
+                    >
+                      <Image
+                        src={editSvg}
+                        alt="Send icon"
+                        className="dark:invert h-7 w-7"
+                      />
+                    </Button>
+                  </Tooltip>
                 </div>
               </div>
               <div className="flex items-center mb-4">

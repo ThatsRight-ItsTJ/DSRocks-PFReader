@@ -1,8 +1,8 @@
 "use client";
 
+import { useRef, useEffect, useState } from "react";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef, useEffect, useState } from "react";
 import { useCompletion } from "ai/react";
 import { useTheme } from "next-themes";
 import {
@@ -14,12 +14,10 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
-
-import infoSvg from "@material-design-icons/svg/filled/info.svg";
-import editSvg from "@material-design-icons/svg/filled/edit.svg";
 import Image from "next/image";
 
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import editSvg from "@material-design-icons/svg/filled/edit.svg";
+import infoSvg from "@material-design-icons/svg/filled/info.svg";
 
 import {
   models,
@@ -28,6 +26,7 @@ import {
   generate_system_prompt,
 } from "@/lib/prompt";
 
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
 const instructionAtom = atomWithStorage("instruction", "basicProofread");
@@ -51,8 +50,6 @@ export default function Home() {
 
   const editorRef = useRef<MonacoDiffEditor | null>(null);
   const isInitializing = useRef(true);
-  const isUpdatingOriginalText = useRef(false);
-  const isUpdatingModifiedText = useRef(false);
 
   const [model, setModel] = useAtom(modelAtom);
   const [context, setContext] = useAtom(contextAtom);
@@ -69,8 +66,7 @@ export default function Home() {
     editor.getModifiedEditor().setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
-      if (isInitializing.current || isUpdatingOriginalText.current) {
-        isUpdatingOriginalText.current = false;
+      if (isInitializing.current) {
         return;
       }
       const value = editor.getOriginalEditor().getValue();
@@ -80,8 +76,7 @@ export default function Home() {
     };
 
     const handleModifiedContentChange = () => {
-      if (isInitializing.current || isUpdatingModifiedText.current) {
-        isUpdatingModifiedText.current = false;
+      if (isInitializing.current) {
         return;
       }
       const value = editor.getModifiedEditor().getValue();
@@ -145,7 +140,7 @@ export default function Home() {
                     label="Select a model"
                     selectedKeys={[model]}
                     onSelectionChange={(keys) =>
-                      keys && setModel(keys.currentKey as string)
+                      keys?.currentKey && setModel(keys.currentKey as string)
                     }
                     className="max-w-64"
                   >
@@ -157,7 +152,7 @@ export default function Home() {
                     label="Select a context"
                     selectedKeys={[context]}
                     onSelectionChange={(keys) =>
-                      keys && setContext(keys.currentKey as string)
+                      keys?.currentKey && setContext(keys?.currentKey)
                     }
                     className="max-w-40"
                   >
@@ -169,7 +164,7 @@ export default function Home() {
                     label="Select an instruction"
                     selectedKeys={[instruction]}
                     onSelectionChange={(keys) =>
-                      keys && setInstruction(keys.currentKey as string)
+                      keys?.currentKey && setInstruction(keys?.currentKey)
                     }
                     className="max-w-md"
                   >
@@ -217,7 +212,11 @@ export default function Home() {
               <div className="flex items-center mb-4">
                 <div
                   className="flex justify-center"
-                  style={{ width: `${(leftHeaderWidth ?? 0) - 14}px` }}
+                  style={{
+                    width: `${
+                      leftHeaderWidth !== undefined ? leftHeaderWidth - 14 : 0
+                    }px`,
+                  }}
                 >
                   Original Text
                 </div>

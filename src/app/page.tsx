@@ -40,7 +40,7 @@ const textModifiedEditorAtom = atomWithStorage<string | undefined>(
 );
 const leftHeaderWidthAtom = atom<number | undefined>(undefined);
 
-export default function Home() {
+export default function HomePage() {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 

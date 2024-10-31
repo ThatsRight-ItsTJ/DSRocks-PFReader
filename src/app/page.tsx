@@ -151,6 +151,7 @@ export default function HomePage() {
 
   const { completion, complete, isLoading } = useCompletion({
     onError: (error) => {
+      console.error("Proofreading failed:", error);
       settingDisclosure.onOpen();
     },
   });

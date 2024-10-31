@@ -30,17 +30,16 @@ export async function POST(req: NextRequest) {
   let baseURL = "";
   let openaiApiKey = "";
 
-  if (endpoint === process.env.NEXT_PUBLIC_URL) {
-    if (apiKeys.includes(apiKey)) {
-      baseURL = process.env.OPENAI_BASE_URL!;
-      openaiApiKey = process.env.OPENAI_API_KEY!;
-    } else {
-      // Return unauthorized error
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+  if (apiKeys.includes(apiKey)) {
+    baseURL = process.env.OPENAI_BASE_URL!;
+    openaiApiKey = process.env.OPENAI_API_KEY!;
   } else {
     baseURL = endpoint;
     openaiApiKey = apiKey;
+  }
+
+  if (!baseURL || !openaiApiKey) {
+    return new NextResponse("Invalid API key or endpoint", { status: 403 });
   }
 
   const openai = createOpenAI({

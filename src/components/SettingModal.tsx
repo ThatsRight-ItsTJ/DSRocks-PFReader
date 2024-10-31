@@ -19,7 +19,7 @@ export default function SettingModal({ disclosure }: SettingModalProps) {
   const { isOpen, onOpenChange } = disclosure;
 
   const [endpoint, setEndpoint] = useLocalStorageState("endpoint", {
-    defaultValue: process.env.NEXT_PUBLIC_URL,
+    defaultValue: "",
   });
 
   const [apiKey, setApiKey] = useLocalStorageState("apiKey", {
@@ -27,7 +27,7 @@ export default function SettingModal({ disclosure }: SettingModalProps) {
   });
 
   const resetSettings = () => {
-    setEndpoint(process.env.NEXT_PUBLIC_URL!);
+    setEndpoint("");
     setApiKey("");
   };
 

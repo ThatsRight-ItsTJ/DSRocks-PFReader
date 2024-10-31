@@ -77,7 +77,7 @@ export default function HomePage() {
   );
 
   const [endpoint] = useLocalStorageState("endpoint", {
-    defaultValue: process.env.NEXT_PUBLIC_URL,
+    defaultValue: "",
   });
 
   const [apiKey] = useLocalStorageState("apiKey", {

@@ -16,8 +16,9 @@ import {
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import Image from "next/image";
 
-import editSvg from "@material-design-icons/svg/filled/edit.svg";
-import infoSvg from "@material-design-icons/svg/filled/info.svg";
+import editSvg from "@/public/icons/edit.svg";
+import lightbulbSvg from "@/public/icons/lightbulb.svg";
+import githubSvg from "@/public/icons/github.svg";
 
 import {
   models,
@@ -182,6 +183,15 @@ export default function HomePage() {
                   </Select>
                 </div>
                 <div className="flex gap-2">
+                  <Tooltip content="GitHub repository" closeDelay={0}>
+                    <Button className="h-12 w-12" isIconOnly>
+                      <Image
+                        src={githubSvg}
+                        alt="GitHub icon"
+                        className="dark:invert h-7 w-7"
+                      />
+                    </Button>
+                  </Tooltip>
                   <ThemeSwitcher />
                   <Tooltip
                     content={
@@ -193,7 +203,7 @@ export default function HomePage() {
                   >
                     <Button className="h-12 w-12" isIconOnly>
                       <Image
-                        src={infoSvg}
+                        src={lightbulbSvg}
                         alt="Info icon"
                         className="dark:invert h-7 w-7"
                       />

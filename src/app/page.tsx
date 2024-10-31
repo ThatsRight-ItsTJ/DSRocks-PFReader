@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useCompletion } from "ai/react";
@@ -40,12 +40,7 @@ const textModifiedEditorAtom = atomWithStorage<string | undefined>(
 const leftHeaderWidthAtom = atom<number | undefined>(undefined);
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const editorRef = useRef<MonacoDiffEditor | null>(null);
 
@@ -127,11 +122,6 @@ export default function HomePage() {
       }
     }
   };
-
-  // Wait until originalText, modifiedText are loaded from storage and component is mounted
-  if (!mounted || originalText === undefined || modifiedText === undefined) {
-    return null; // or a loading indicator
-  }
 
   return (
     <main>

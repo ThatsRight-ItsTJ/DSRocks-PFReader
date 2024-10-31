@@ -36,7 +36,12 @@ export async function POST(req: NextRequest) {
     openaiApiKey = process.env.OPENAI_API_KEY!;
 
     if (!models.includes(model)) {
-      return new NextResponse("Invalid model", { status: 400 });
+      return new NextResponse(
+        "Invalid model, Please provide your own api when using a custom model",
+        {
+          status: 400,
+        }
+      );
     }
   } else {
     baseURL = endpoint;

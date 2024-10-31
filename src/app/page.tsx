@@ -5,12 +5,28 @@ import { atomWithStorage } from "jotai/utils";
 import { useRef, useEffect, useState } from "react";
 import { useCompletion } from "ai/react";
 import { useTheme } from "next-themes";
-import { Button, Select, SelectItem, Card, CardBody } from "@nextui-org/react";
+import {
+  Button,
+  Select,
+  SelectItem,
+  Card,
+  CardBody,
+  Tooltip,
+} from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
+
+import infoSvg from "@material-design-icons/svg/filled/info.svg";
+import sendSvg from "@material-design-icons/svg/filled/send.svg";
+import Image from "next/image";
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
-import { models, contexts, instructions } from "@/lib/prompt";
+import {
+  models,
+  contexts,
+  instructions,
+  generate_system_prompt,
+} from "@/lib/prompt";
 
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
@@ -94,7 +110,7 @@ export default function Home() {
     isInitializing.current = false;
   };
 
-  const { completion, complete } = useCompletion();
+  const { completion, complete, isLoading } = useCompletion();
 
   useEffect(() => {
     if (completion && completion !== modifiedText) {
@@ -197,10 +213,36 @@ export default function Home() {
                       </SelectItem>
                     ))}
                   </Select>
-                  <Button onPress={handleProofread}>Proofread</Button>
                 </div>
-                <div className="flex-none">
+                <div className="flex gap-2">
                   <ThemeSwitcher />
+                  <Tooltip
+                    content={
+                      <div className="max-w-md">
+                        {generate_system_prompt(context, instruction)}
+                      </div>
+                    }
+                    closeDelay={0}
+                  >
+                    <Button isIconOnly>
+                      <Image
+                        src={infoSvg}
+                        alt="Info icon"
+                        width={24}
+                        height={24}
+                        className="dark:invert"
+                      />
+                    </Button>
+                  </Tooltip>
+                  <Button isIconOnly onPress={() => handleProofread()} isLoading={isLoading}>
+                    <Image
+                      src={sendSvg}
+                      alt="Send icon"
+                      width={24}
+                      height={24}
+                      className="dark:invert"
+                    />
+                  </Button>
                 </div>
               </div>
               <div className="flex items-center mb-4">

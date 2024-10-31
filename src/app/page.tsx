@@ -12,6 +12,7 @@ import {
   Card,
   CardBody,
   Tooltip,
+  Link,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import Image from "next/image";
@@ -184,7 +185,13 @@ export default function HomePage() {
                 </div>
                 <div className="flex gap-2">
                   <Tooltip content="GitHub repository" closeDelay={0}>
-                    <Button className="h-12 w-12" isIconOnly>
+                    <Button
+                      className="h-12 w-12"
+                      as={Link}
+                      isIconOnly
+                      href="https://github.com/AuroraDysis/waner-proofreader"
+                      isExternal
+                    >
                       <Image
                         src={githubSvg}
                         alt="GitHub icon"

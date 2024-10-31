@@ -3,11 +3,16 @@
 import { useRef, useEffect, useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
 import { useCompletion } from "ai/react";
-import { useTheme } from "next-themes";
-import { Select, SelectItem, Card, CardBody, Link } from "@nextui-org/react";
+import { useTheme, ThemeProvider as NextThemesProvider } from "next-themes";
+import {
+  Select,
+  SelectItem,
+  Card,
+  CardBody,
+  Link,
+  NextUIProvider,
+} from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
-import { NextUIProvider } from "@nextui-org/react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/Icon";
@@ -50,20 +55,22 @@ export default function HomePage() {
   );
   const [leftHeaderWidth, setLeftHeaderWidth] = useState<number | null>(null);
 
-  // model must be one of the available models
-  if (!models.includes(model)) {
-    setModel(models[0]);
-  }
+  useEffect(() => {
+    // model must be one of the available models
+    if (!models.includes(model)) {
+      setModel(models[0]);
+    }
 
-  // context must be one of the available contexts
-  if (!contexts.some((c) => c.key === context)) {
-    setContext(contexts[0].key);
-  }
+    // context must be one of the available contexts
+    if (!contexts.some((c) => c.key === context)) {
+      setContext(contexts[0].key);
+    }
 
-  // instruction must be one of the available instructions
-  if (!instructions.some((i) => i.key === instruction)) {
-    setInstruction(instructions[0].key);
-  }
+    // instruction must be one of the available instructions
+    if (!instructions.some((i) => i.key === instruction)) {
+      setInstruction(instructions[0].key);
+    }
+  }, [model, context, instruction]);
 
   const originalTextInitialized = useRef(false);
   const modifiedTextInitialized = useRef(false);

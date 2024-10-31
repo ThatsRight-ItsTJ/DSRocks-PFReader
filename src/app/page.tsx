@@ -72,28 +72,20 @@ export default function HomePage() {
     }
   }, [model, context, instruction]);
 
-  const originalTextInitialized = useRef(false);
-  const modifiedTextInitialized = useRef(false);
+  // Initialize the text in the editor
+  const textInitialized = useRef(false);
   useEffect(() => {
     if (
-      !originalTextInitialized.current &&
+      !textInitialized.current &&
       editorRef.current !== null &&
-      originalText !== null
-    ) {
-      editorRef.current?.getOriginalEditor().setValue(originalText);
-      originalTextInitialized.current = true;
-    }
-  }, [editorRef.current, originalText]);
-  useEffect(() => {
-    if (
-      !modifiedTextInitialized.current &&
-      editorRef.current !== null &&
+      originalText !== null &&
       modifiedText !== null
     ) {
+      editorRef.current?.getOriginalEditor().setValue(originalText);
       editorRef.current?.getModifiedEditor().setValue(modifiedText);
-      modifiedTextInitialized.current = true;
+      textInitialized.current = true;
     }
-  }, [editorRef.current, modifiedText]);
+  }, [editorRef.current, originalText, modifiedText]);
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;

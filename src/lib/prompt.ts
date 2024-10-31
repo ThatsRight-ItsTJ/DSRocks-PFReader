@@ -4,6 +4,7 @@ export const models = process.env.NEXT_PUBLIC_OPENAI_MODEL?.split(
 
 export const contexts = [
   { key: "academic", label: "Academic" },
+  { key: "general", label: "General" },
   { key: "instantMessage", label: "Instant Message" },
   { key: "email", label: "Email" },
   { key: "oral", label: "Oral" },
@@ -62,6 +63,9 @@ export function generate_system_prompt(
     case "academic":
       styleGuidelines =
         "Ensure the language is formal and adheres to academic writing standards.";
+      break;
+    case "general":
+      styleGuidelines = "Use a neutral tone appropriate for general audiences.";
       break;
     case "instantMessage":
       styleGuidelines =

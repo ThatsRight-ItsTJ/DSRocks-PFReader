@@ -3,6 +3,7 @@ import "./globals.css";
 import { Provider as JotaiProvider } from "jotai";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const metadata: Metadata = {
   title: "Waner Proofreader",
@@ -22,7 +23,9 @@ export default function RootLayout({
         <JotaiProvider>
           <NextUIProvider>
             <NextThemesProvider attribute="class" defaultTheme="dark">
-              {children}
+              <ErrorBoundary fallback={<div>Something went wrong</div>}>
+                {children}
+              </ErrorBoundary>
             </NextThemesProvider>
           </NextUIProvider>
         </JotaiProvider>

@@ -17,9 +17,9 @@ import {
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import Image from "next/image";
 
-import editSvg from "@/public/icons/edit.svg";
-import lightbulbSvg from "@/public/icons/lightbulb.svg";
-import githubSvg from "@/public/icons/github.svg";
+import editSvg from "@/icons/edit.svg";
+import lightbulbSvg from "@/icons/lightbulb.svg";
+import githubSvg from "@/icons/github.svg";
 
 import {
   models,

@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { Button, Tooltip } from "@nextui-org/react";
 import Image from "next/image";
-import lightModeSvg from "@/public/icons/light_mode.svg";
-import darkModeSvg from "@/public/icons/dark_mode.svg";
+import lightModeSvg from "@/icons/light_mode.svg";
+import darkModeSvg from "@/icons/dark_mode.svg";
 
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);

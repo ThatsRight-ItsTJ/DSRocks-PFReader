@@ -12,10 +12,14 @@ import { LinkIcon, LockIcon } from "@/components/Icon";
 import useLocalStorageState from "use-local-storage-state";
 
 export interface SettingModalProps {
+  proofreadError: string | null;
   disclosure: ReturnType<typeof useDisclosure>;
 }
 
-export default function SettingModal({ disclosure }: SettingModalProps) {
+export default function SettingModal({
+  proofreadError,
+  disclosure,
+}: SettingModalProps) {
   const { isOpen, onOpenChange } = disclosure;
 
   const [endpoint, setEndpoint] = useLocalStorageState("endpoint", {
@@ -41,13 +45,20 @@ export default function SettingModal({ disclosure }: SettingModalProps) {
                 Settings
               </ModalHeader>
               <ModalBody>
+                {
+                  proofreadError && (
+                    <span className="text-sm text-red-600 dark:text-red-400">
+                      Error: {proofreadError}
+                    </span>
+                  )
+                }
                 <Input
                   autoFocus
                   endContent={
                     <LinkIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0 dark:invert" />
                   }
                   label="OpenAI Endpoint"
-                  description="Must start with http(s)://"
+                  description="Must start with http(s)://, empty to use server-side configuration"
                   placeholder="Enter your endpoint"
                   variant="bordered"
                   value={endpoint}

@@ -76,6 +76,8 @@ export default function HomePage() {
     }
   );
 
+  const [proofreadError, setProofreadError] = useState<string | null>(null);
+
   const [endpoint] = useLocalStorageState("endpoint", {
     defaultValue: "",
   });
@@ -151,8 +153,11 @@ export default function HomePage() {
 
   const { completion, complete, isLoading } = useCompletion({
     onError: (error) => {
-      console.error("Proofreading failed:", error);
+      setProofreadError(error.message);
       settingDisclosure.onOpen();
+    },
+    onFinish: () => {
+      setProofreadError(null);
     },
   });
 
@@ -248,7 +253,10 @@ export default function HomePage() {
                           icon={<SettingIcon className="dark:invert h-7 w-7" />}
                           onPress={settingDisclosure.onOpen}
                         />
-                        <SettingModal disclosure={settingDisclosure} />
+                        <SettingModal
+                          proofreadError={proofreadError}
+                          disclosure={settingDisclosure}
+                        />
                         <IconButton
                           tooltip={
                             <div className="max-w-md">

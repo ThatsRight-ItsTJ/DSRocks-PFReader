@@ -10,12 +10,18 @@ import {
   Card,
   CardBody,
   Link,
+  useDisclosure,
   NextUIProvider,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/Icon";
+import {
+  EditIcon,
+  LightbulbIcon,
+  GithubIcon,
+  SettingIcon,
+} from "@/components/Icon";
 
 import {
   models,
@@ -26,6 +32,7 @@ import {
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import IconButton from "@/components/IconButton";
+import SettingModal from "@/components/SettingModal";
 
 // https://github.com/astoilkov/use-local-storage-state/issues/56
 function useIsServerRender() {
@@ -44,6 +51,8 @@ export default function HomePage() {
 
   const [editorMounted, setEditorMounted] = useState(false);
   const editorRef = useRef<MonacoDiffEditor | null>(null);
+
+  const settingDisclosure = useDisclosure();
 
   const [model, setModel] = useLocalStorageState("model", {
     defaultValue: models[0],
@@ -66,6 +75,15 @@ export default function HomePage() {
       defaultValue: "",
     }
   );
+
+  const [endpoint] = useLocalStorageState("endpoint", {
+    defaultValue: process.env.NEXT_PUBLIC_URL,
+  });
+
+  const [apiKey] = useLocalStorageState("apiKey", {
+    defaultValue: "",
+  });
+
   const [leftHeaderWidth, setLeftHeaderWidth] = useState<number | null>(null);
 
   const isServerRender = useIsServerRender();
@@ -131,11 +149,14 @@ export default function HomePage() {
     setEditorMounted(true);
   };
 
-  const { completion, complete, isLoading } = useCompletion();
+  const { completion, complete, isLoading } = useCompletion({
+    onError: (error) => {
+      settingDisclosure.onOpen();
+    },
+  });
 
   useEffect(() => {
-    const currentModifiedText = editorRef.current?.getModifiedEditor().getValue();
-    if (completion && completion !== currentModifiedText) {
+    if (completion) {
       editorRef.current?.getModifiedEditor().setValue(completion);
     }
   }, [completion]);
@@ -148,6 +169,8 @@ export default function HomePage() {
             model: model,
             context: context,
             instruction: instruction,
+            endpoint: endpoint,
+            apiKey: apiKey,
           },
         });
       } catch (error) {
@@ -220,9 +243,20 @@ export default function HomePage() {
                         />
                         <ThemeSwitcher />
                         <IconButton
+                          tooltip="Settings"
+                          icon={<SettingIcon className="dark:invert h-7 w-7" />}
+                          onPress={settingDisclosure.onOpen}
+                        />
+                        <SettingModal disclosure={settingDisclosure} />
+                        <IconButton
                           tooltip={
                             <div className="max-w-md">
-                              {generate_system_prompt(context, instruction)}
+                              <h2 className="text-lg font-semibold text-center">
+                                System Prompt
+                              </h2>
+                              <span className="text-sm">
+                                {generate_system_prompt(context, instruction)}
+                              </span>
                             </div>
                           }
                           icon={

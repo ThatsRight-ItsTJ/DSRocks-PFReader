@@ -33,12 +33,18 @@ export default function HomePage() {
   const [instruction, setInstruction] = useLocalStorageState("instruction", {
     defaultValue: instructions[0].key,
   });
-  const [originalText, setOriginalText] = useLocalStorageState("originalText", {
-    defaultValue: "",
-  });
-  const [modifiedText, setModifiedText] = useLocalStorageState("modifiedText", {
-    defaultValue: "",
-  });
+  const [originalText, setOriginalText] = useLocalStorageState<string | null>(
+    "originalText",
+    {
+      defaultValue: null,
+    }
+  );
+  const [modifiedText, setModifiedText] = useLocalStorageState<string | null>(
+    "modifiedText",
+    {
+      defaultValue: null,
+    }
+  );
   const [leftHeaderWidth, setLeftHeaderWidth] = useState<number | null>(null);
 
   // model must be one of the available models
@@ -56,12 +62,31 @@ export default function HomePage() {
     setInstruction(instructions[0].key);
   }
 
+  const originalTextInitialized = useRef(false);
+  const modifiedTextInitialized = useRef(false);
+  useEffect(() => {
+    if (
+      !originalTextInitialized.current &&
+      editorRef.current !== null &&
+      originalText !== null
+    ) {
+      editorRef.current?.getOriginalEditor().setValue(originalText);
+      originalTextInitialized.current = true;
+    }
+  }, [editorRef.current, originalText]);
+  useEffect(() => {
+    if (
+      !modifiedTextInitialized.current &&
+      editorRef.current !== null &&
+      modifiedText !== null
+    ) {
+      editorRef.current?.getModifiedEditor().setValue(modifiedText);
+      modifiedTextInitialized.current = true;
+    }
+  }, [editorRef.current, modifiedText]);
+
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
-
-    // Set the initial content for the editors
-    editor.getOriginalEditor().setValue(originalText);
-    editor.getModifiedEditor().setValue(modifiedText);
 
     const handleOriginalContentChange = () => {
       const value = editor.getOriginalEditor().getValue();

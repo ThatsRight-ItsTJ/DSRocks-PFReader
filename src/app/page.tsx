@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useSyncExternalStore } from "react";
 import useLocalStorageState from "use-local-storage-state";
 import { useCompletion } from "ai/react";
-import { useTheme, ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import {
   Select,
   SelectItem,
@@ -47,8 +47,6 @@ function useIsServerRender() {
 }
 
 export default function HomePage() {
-  const { theme } = useTheme();
-
   const [editorMounted, setEditorMounted] = useState(false);
   const editorRef = useRef<MonacoDiffEditor | null>(null);
 
@@ -247,7 +245,7 @@ export default function HomePage() {
                           href="https://github.com/AuroraDysis/waner-proofreader"
                           isExternal
                         />
-                        <ThemeSwitcher />
+                        <ThemeSwitcher editorMounted={editorMounted} />
                         <IconButton
                           tooltip="Settings"
                           icon={<SettingIcon className="dark:invert h-7 w-7" />}
@@ -299,7 +297,6 @@ export default function HomePage() {
                       <DiffEditor
                         className="h-full"
                         language="plaintext"
-                        theme={theme === "dark" ? "vs-dark" : "vs"}
                         options={{ originalEditable: true, wordWrap: "on" }}
                         onMount={handleEditorDidMount}
                       />

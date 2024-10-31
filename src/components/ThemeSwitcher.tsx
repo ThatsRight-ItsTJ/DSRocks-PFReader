@@ -6,16 +6,15 @@ import { useMonaco } from "@monaco-editor/react";
 import { LightModeIcon, DarkModeIcon } from "@/components/Icon";
 import IconButton from "@/components/IconButton";
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ editorMounted }: { editorMounted: boolean }) {
   const { theme, setTheme } = useTheme();
 
   const monaco = useMonaco();
-
   useEffect(() => {
-    if (monaco) {
+    if (editorMounted && monaco) {
       monaco.editor.setTheme(theme === "dark" ? "vs-dark" : "vs");
     }
-  }, [monaco, theme]);
+  }, [monaco, theme, editorMounted]);
 
   return (
     <IconButton

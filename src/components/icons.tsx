@@ -1,6 +1,4 @@
-interface IconProps extends React.SVGProps<SVGSVGElement> {}
-
-export const DarkModeIcon = (prop: IconProps) => {
+export const DarkModeIcon = (prop: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +15,7 @@ export const DarkModeIcon = (prop: IconProps) => {
   );
 };
 
-export const LightModeIcon = (prop: IconProps) => {
+export const LightModeIcon = (prop: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +32,7 @@ export const LightModeIcon = (prop: IconProps) => {
   );
 };
 
-export const EditIcon = (prop: IconProps) => {
+export const EditIcon = (prop: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +48,7 @@ export const EditIcon = (prop: IconProps) => {
   );
 };
 
-export const GithubIcon = (prop: IconProps) => {
+export const GithubIcon = (prop: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +64,7 @@ export const GithubIcon = (prop: IconProps) => {
   );
 };
 
-export const LightbulbIcon = (prop: IconProps) => {
+export const LightbulbIcon = (prop: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

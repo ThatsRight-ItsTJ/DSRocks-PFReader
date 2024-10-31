@@ -15,7 +15,6 @@ import {
   Link,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
-import Image from "next/image";
 
 import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/icons";
 

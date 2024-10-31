@@ -6,6 +6,9 @@ import { useCompletion } from "ai/react";
 import { useTheme } from "next-themes";
 import { Select, SelectItem, Card, CardBody, Link } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
+import { NextUIProvider } from "@nextui-org/react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/Icon";
 
@@ -139,104 +142,117 @@ export default function HomePage() {
   };
 
   return (
-    <main>
-      <div className="m-4 h-[96vh]">
-        <Card className="h-full">
-          <CardBody className="overflow-hidden">
-            <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-4 flex-1">
-                  <Select
-                    label="Select a model"
-                    selectedKeys={[model]}
-                    onSelectionChange={(keys) =>
-                      keys?.currentKey && setModel(keys.currentKey as string)
-                    }
-                    className="max-w-64"
-                  >
-                    {models.map((model) => (
-                      <SelectItem key={model}>{model}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select
-                    label="Select a context"
-                    selectedKeys={[context]}
-                    onSelectionChange={(keys) =>
-                      keys?.currentKey && setContext(keys?.currentKey)
-                    }
-                    className="max-w-40"
-                  >
-                    {contexts.map((context) => (
-                      <SelectItem key={context.key}>{context.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select
-                    label="Select an instruction"
-                    selectedKeys={[instruction]}
-                    onSelectionChange={(keys) =>
-                      keys?.currentKey && setInstruction(keys?.currentKey)
-                    }
-                    className="max-w-md"
-                  >
-                    {instructions.map((instruction) => (
-                      <SelectItem key={instruction.key}>
-                        {instruction.prompt}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                </div>
-                <div className="flex gap-2">
-                  <IconButton
-                    tooltip="GitHub repository"
-                    icon={<GithubIcon className="dark:invert h-7 w-7" />}
-                    as={Link}
-                    isIconOnly
-                    href="https://github.com/AuroraDysis/waner-proofreader"
-                    isExternal
-                  />
-                  <ThemeSwitcher />
-                  <IconButton
-                    tooltip={
-                      <div className="max-w-md">
-                        {generate_system_prompt(context, instruction)}
+    <NextUIProvider>
+      <NextThemesProvider attribute="class" defaultTheme="dark">
+        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+          <main>
+            <div className="m-4 h-[96vh]">
+              <Card className="h-full">
+                <CardBody className="overflow-hidden">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <div className="flex items-center gap-4 flex-1">
+                        <Select
+                          label="Select a model"
+                          selectedKeys={[model]}
+                          onSelectionChange={(keys) =>
+                            keys?.currentKey &&
+                            setModel(keys.currentKey as string)
+                          }
+                          className="max-w-64"
+                        >
+                          {models.map((model) => (
+                            <SelectItem key={model}>{model}</SelectItem>
+                          ))}
+                        </Select>
+                        <Select
+                          label="Select a context"
+                          selectedKeys={[context]}
+                          onSelectionChange={(keys) =>
+                            keys?.currentKey && setContext(keys?.currentKey)
+                          }
+                          className="max-w-40"
+                        >
+                          {contexts.map((context) => (
+                            <SelectItem key={context.key}>
+                              {context.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                        <Select
+                          label="Select an instruction"
+                          selectedKeys={[instruction]}
+                          onSelectionChange={(keys) =>
+                            keys?.currentKey && setInstruction(keys?.currentKey)
+                          }
+                          className="max-w-md"
+                        >
+                          {instructions.map((instruction) => (
+                            <SelectItem key={instruction.key}>
+                              {instruction.prompt}
+                            </SelectItem>
+                          ))}
+                        </Select>
                       </div>
-                    }
-                    icon={<LightbulbIcon className="dark:invert h-7 w-7" />}
-                  />
-                  <IconButton
-                    tooltip="Proofread"
-                    icon={<EditIcon className="dark:invert h-7 w-7" />}
-                    isLoading={isLoading}
-                    onPress={() => handleProofread()}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center mb-4">
-                <div
-                  className="flex justify-center"
-                  style={{
-                    width: `${
-                      leftHeaderWidth ? leftHeaderWidth - 14 : "50%"
-                    }px`,
-                  }}
-                >
-                  Original Text
-                </div>
-                <div className="flex justify-center flex-1">Modified Text</div>
-              </div>
-              <div className="flex-grow">
-                <DiffEditor
-                  className="h-full"
-                  language="plaintext"
-                  theme={theme === "dark" ? "vs-dark" : "vs"}
-                  options={{ originalEditable: true, wordWrap: "on" }}
-                  onMount={handleEditorDidMount}
-                />
-              </div>
+                      <div className="flex gap-2">
+                        <IconButton
+                          tooltip="GitHub repository"
+                          icon={<GithubIcon className="dark:invert h-7 w-7" />}
+                          as={Link}
+                          isIconOnly
+                          href="https://github.com/AuroraDysis/waner-proofreader"
+                          isExternal
+                        />
+                        <ThemeSwitcher />
+                        <IconButton
+                          tooltip={
+                            <div className="max-w-md">
+                              {generate_system_prompt(context, instruction)}
+                            </div>
+                          }
+                          icon={
+                            <LightbulbIcon className="dark:invert h-7 w-7" />
+                          }
+                        />
+                        <IconButton
+                          tooltip="Proofread"
+                          icon={<EditIcon className="dark:invert h-7 w-7" />}
+                          isLoading={isLoading}
+                          onPress={() => handleProofread()}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center mb-4">
+                      <div
+                        className="flex justify-center"
+                        style={{
+                          width: `${
+                            leftHeaderWidth ? leftHeaderWidth - 14 : "50%"
+                          }px`,
+                        }}
+                      >
+                        Original Text
+                      </div>
+                      <div className="flex justify-center flex-1">
+                        Modified Text
+                      </div>
+                    </div>
+                    <div className="flex-grow">
+                      <DiffEditor
+                        className="h-full"
+                        language="plaintext"
+                        theme={theme === "dark" ? "vs-dark" : "vs"}
+                        options={{ originalEditable: true, wordWrap: "on" }}
+                        onMount={handleEditorDidMount}
+                      />
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
             </div>
-          </CardBody>
-        </Card>
-      </div>
-    </main>
+          </main>
+        </ErrorBoundary>
+      </NextThemesProvider>
+    </NextUIProvider>
   );
 }

@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { NextUIProvider } from "@nextui-org/react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { ErrorBoundary } from "react-error-boundary";
 
 export const metadata: Metadata = {
   title: "Waner Proofreader",
@@ -18,15 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="antialiased">
-        <NextUIProvider>
-          <NextThemesProvider attribute="class" defaultTheme="dark">
-            <ErrorBoundary fallback={<div>Something went wrong</div>}>
-              {children}
-            </ErrorBoundary>
-          </NextThemesProvider>
-        </NextUIProvider>
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

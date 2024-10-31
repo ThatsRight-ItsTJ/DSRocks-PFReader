@@ -49,7 +49,6 @@ export default function Home() {
   }, []);
 
   const editorRef = useRef<MonacoDiffEditor | null>(null);
-  const isInitializing = useRef(true);
 
   const [model, setModel] = useAtom(modelAtom);
   const [context, setContext] = useAtom(contextAtom);
@@ -66,9 +65,6 @@ export default function Home() {
     editor.getModifiedEditor().setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
-      if (isInitializing.current) {
-        return;
-      }
       const value = editor.getOriginalEditor().getValue();
       if (value !== originalText) {
         setOriginalText(value);
@@ -76,9 +72,6 @@ export default function Home() {
     };
 
     const handleModifiedContentChange = () => {
-      if (isInitializing.current) {
-        return;
-      }
       const value = editor.getModifiedEditor().getValue();
       if (value !== modifiedText) {
         setModifiedText(value);
@@ -95,8 +88,6 @@ export default function Home() {
     editor.getOriginalEditor().onDidLayoutChange((layout) => {
       setLeftHeaderWidth(layout.width);
     });
-    // Set isInitializing to false after initial setup
-    isInitializing.current = false;
   };
 
   const { completion, complete, isLoading } = useCompletion();

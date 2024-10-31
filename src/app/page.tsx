@@ -73,6 +73,7 @@ export default function HomePage() {
   }, [model, context, instruction]);
 
   // Initialize the text in the editor
+  // https://github.com/astoilkov/use-local-storage-state/issues/56
   const textInitialized = useRef(false);
   useEffect(() => {
     if (

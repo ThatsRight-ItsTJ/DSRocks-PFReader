@@ -1,6 +1,8 @@
 # Waner Proofreader
 
-Waner Proofreader is an AI-powered tool designed to help non-native English speakers proofread their text smoothly. The tool is named after the historical figure 上官婉儿 (Shangguan Wan'er), a renowned Chinese poet and politician.
+Waner Proofreader is an AI-powered tool designed to help non-native English speakers proofread their text smoothly.
+
+> The tool is named after <del>the character Shangguan from the game Honor of Kings (王者荣耀里的上官婉儿)</del> the historical figure Shangguan Wan'er (上官婉儿), a renowned Chinese poet and politician.
 
 # Screenshots
 

@@ -17,9 +17,7 @@ import {
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import Image from "next/image";
 
-import editSvg from "@/icons/edit.svg";
-import lightbulbSvg from "@/icons/lightbulb.svg";
-import githubSvg from "@/icons/github.svg";
+import { EditIcon, LightbulbIcon, GithubIcon } from "@/components/icons";
 
 import {
   models,
@@ -192,11 +190,7 @@ export default function HomePage() {
                       href="https://github.com/AuroraDysis/waner-proofreader"
                       isExternal
                     >
-                      <Image
-                        src={githubSvg}
-                        alt="GitHub icon"
-                        className="dark:invert h-7 w-7"
-                      />
+                      <GithubIcon className="dark:invert h-7 w-7" />
                     </Button>
                   </Tooltip>
                   <ThemeSwitcher />
@@ -209,11 +203,7 @@ export default function HomePage() {
                     closeDelay={0}
                   >
                     <Button className="h-12 w-12" isIconOnly>
-                      <Image
-                        src={lightbulbSvg}
-                        alt="Info icon"
-                        className="dark:invert h-7 w-7"
-                      />
+                      <LightbulbIcon className="dark:invert h-7 w-7" />
                     </Button>
                   </Tooltip>
                   <Tooltip content="Proofread" closeDelay={0}>
@@ -223,11 +213,7 @@ export default function HomePage() {
                       onPress={() => handleProofread()}
                       isLoading={isLoading}
                     >
-                      <Image
-                        src={editSvg}
-                        alt="Send icon"
-                        className="dark:invert h-7 w-7"
-                      />
+                      <EditIcon className="dark:invert h-7 w-7" />
                     </Button>
                   </Tooltip>
                 </div>

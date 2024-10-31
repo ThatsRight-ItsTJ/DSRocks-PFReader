@@ -4,9 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { Button, Tooltip } from "@nextui-org/react";
-import Image from "next/image";
-import lightModeSvg from "@/icons/light_mode.svg";
-import darkModeSvg from "@/icons/dark_mode.svg";
+import { LightModeIcon, DarkModeIcon } from "@/components/icons";
 
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
@@ -35,19 +33,11 @@ export function ThemeSwitcher() {
       >
         {mounted && theme === "dark" ? (
           <div>
-            <Image
-              src={darkModeSvg}
-              alt="Night Mode Icon"
-              className="h-7 w-7 dark:invert"
-            />
+            <DarkModeIcon className="h-7 w-7 dark:invert" />
           </div>
         ) : (
           <div>
-            <Image
-              src={lightModeSvg}
-              alt="Light Mode Icon"
-              className="h-7 w-7 dark:invert"
-            />
+            <LightModeIcon className="h-7 w-7 dark:invert" />
           </div>
         )}
       </Button>

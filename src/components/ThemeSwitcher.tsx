@@ -35,11 +35,19 @@ export function ThemeSwitcher() {
       >
         {mounted && theme === "dark" ? (
           <div>
-            <Image src={moonSvg} alt="Moon icon" className="h-7 w-7 dark:invert" />
+            <Image
+              src={moonSvg}
+              alt="Moon icon"
+              className="h-7 w-7 dark:invert"
+            />
           </div>
         ) : (
           <div>
-            <Image src={sunSvg} alt="Sun icon" className="h-7 w-7 dark:invert" />
+            <Image
+              src={sunSvg}
+              alt="Sun icon"
+              className="h-7 w-7 dark:invert"
+            />
           </div>
         )}
       </Button>

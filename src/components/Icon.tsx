@@ -6,7 +6,6 @@ export const DarkModeIcon = (prop: React.SVGProps<SVGSVGElement>) => {
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
-      fill="#5f6368"
       {...prop}
     >
       <rect fill="none" height="24" width="24" />
@@ -23,7 +22,6 @@ export const LightModeIcon = (prop: React.SVGProps<SVGSVGElement>) => {
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
-      fill="#5f6368"
       {...prop}
     >
       <rect fill="none" height="24" width="24" />
@@ -39,7 +37,6 @@ export const EditIcon = (prop: React.SVGProps<SVGSVGElement>) => {
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
-      fill="#5f6368"
       {...prop}
     >
       <path d="M0 0h24v24H0z" fill="none" />
@@ -55,7 +52,6 @@ export const GithubIcon = (prop: React.SVGProps<SVGSVGElement>) => {
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
-      fill="#5f6368"
       {...prop}
     >
       <path d="M0 0h24v24H0z" fill="none" />
@@ -71,7 +67,6 @@ export const LightbulbIcon = (prop: React.SVGProps<SVGSVGElement>) => {
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
-      fill="#5f6368"
       {...prop}
     >
       <path d="M0 0h24v24H0z" fill="none" />

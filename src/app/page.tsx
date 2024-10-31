@@ -2,21 +2,15 @@
 
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useCompletion } from "ai/react";
-import {
-  Button,
-  NextUIProvider,
-  Select,
-  SelectItem,
-  Divider,
-  Card,
-  CardBody,
-} from "@nextui-org/react";
+import { useTheme } from "next-themes";
+import { Button, Select, SelectItem, Card, CardBody } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+
 import { models, contexts, instructions } from "@/lib/prompt";
-import { set } from "lodash";
 
 const modelAtom = atomWithStorage("model", "anthropic/claude-3.5-sonnet");
 const contextAtom = atomWithStorage("modelContext", "academic");
@@ -32,6 +26,13 @@ const textModifiedEditorAtom = atomWithStorage<string | undefined>(
 const leftHeaderWidthAtom = atom<number | undefined>(undefined);
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const editorRef = useRef<MonacoDiffEditor | null>(null);
   const isInitializing = useRef(true);
   const isUpdatingOriginalText = useRef(false);
@@ -89,7 +90,6 @@ export default function Home() {
     editor.getOriginalEditor().onDidLayoutChange((layout) => {
       setLeftHeaderWidth(layout.width);
     });
-
     // Set isInitializing to false after initial setup
     isInitializing.current = false;
   };
@@ -146,57 +146,62 @@ export default function Home() {
     }
   };
 
-  // Wait until originalText and modifiedText are loaded from storage
-  if (originalText === undefined || modifiedText === undefined) {
+  // Wait until originalText, modifiedText are loaded from storage and component is mounted
+  if (!mounted || originalText === undefined || modifiedText === undefined) {
     return null; // or a loading indicator
   }
 
   return (
-    <NextUIProvider>
+    <main>
       <div className="m-4 h-[96vh]">
         <Card className="h-full">
           <CardBody className="overflow-hidden">
             <div className="flex flex-col h-full">
-              <div className="flex items-center gap-4 mb-4">
-                <Select
-                  label="Select a model"
-                  selectedKeys={[model]}
-                  onSelectionChange={(keys) =>
-                    keys && setModel(keys.currentKey as string)
-                  }
-                  className="max-w-64"
-                >
-                  {models.map((model) => (
-                    <SelectItem key={model}>{model}</SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  label="Select a context"
-                  selectedKeys={[context]}
-                  onSelectionChange={(keys) =>
-                    keys && setContext(keys.currentKey as string)
-                  }
-                  className="max-w-36"
-                >
-                  {contexts.map((context) => (
-                    <SelectItem key={context.key}>{context.label}</SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  label="Select an instruction"
-                  selectedKeys={[instruction]}
-                  onSelectionChange={(keys) =>
-                    keys && setInstruction(keys.currentKey as string)
-                  }
-                  className="max-w-md"
-                >
-                  {instructions.map((instruction) => (
-                    <SelectItem key={instruction.key}>
-                      {instruction.prompt}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Button onPress={handleProofread}>Proofread</Button>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-4 flex-1">
+                  <Select
+                    label="Select a model"
+                    selectedKeys={[model]}
+                    onSelectionChange={(keys) =>
+                      keys && setModel(keys.currentKey as string)
+                    }
+                    className="max-w-64"
+                  >
+                    {models.map((model) => (
+                      <SelectItem key={model}>{model}</SelectItem>
+                    ))}
+                  </Select>
+                  <Select
+                    label="Select a context"
+                    selectedKeys={[context]}
+                    onSelectionChange={(keys) =>
+                      keys && setContext(keys.currentKey as string)
+                    }
+                    className="max-w-36"
+                  >
+                    {contexts.map((context) => (
+                      <SelectItem key={context.key}>{context.label}</SelectItem>
+                    ))}
+                  </Select>
+                  <Select
+                    label="Select an instruction"
+                    selectedKeys={[instruction]}
+                    onSelectionChange={(keys) =>
+                      keys && setInstruction(keys.currentKey as string)
+                    }
+                    className="max-w-md"
+                  >
+                    {instructions.map((instruction) => (
+                      <SelectItem key={instruction.key}>
+                        {instruction.prompt}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <Button onPress={handleProofread}>Proofread</Button>
+                </div>
+                <div className="flex-none">
+                  <ThemeSwitcher />
+                </div>
               </div>
               <div className="flex items-center mb-4">
                 <div
@@ -211,6 +216,7 @@ export default function Home() {
                 <DiffEditor
                   className="h-full"
                   language="plaintext"
+                  theme={theme === "dark" ? "vs-dark" : "vs"}
                   options={{ originalEditable: true, wordWrap: "on" }}
                   onMount={handleEditorDidMount}
                 />
@@ -219,6 +225,6 @@ export default function Home() {
           </CardBody>
         </Card>
       </div>
-    </NextUIProvider>
+    </main>
   );
 }

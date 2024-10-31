@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useSyncExternalStore } from "react";
 import useLocalStorageState from "use-local-storage-state";
 import { useCompletion } from "ai/react";
 import { useTheme, ThemeProvider as NextThemesProvider } from "next-themes";
@@ -27,6 +27,18 @@ import {
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import IconButton from "@/components/IconButton";
 
+// https://github.com/astoilkov/use-local-storage-state/issues/56
+function useIsServerRender() {
+  const isServerRender = useSyncExternalStore(
+    () => {
+      return () => {};
+    },
+    () => false,
+    () => true
+  );
+  return isServerRender;
+}
+
 export default function HomePage() {
   const { theme } = useTheme();
 
@@ -41,21 +53,27 @@ export default function HomePage() {
   const [instruction, setInstruction] = useLocalStorageState("instruction", {
     defaultValue: instructions[0].key,
   });
-  const [originalText, setOriginalText] = useLocalStorageState<string | null>(
+  const [originalText, setOriginalText] = useLocalStorageState<string>(
     "originalText",
     {
-      defaultValue: null,
+      defaultValue: "",
     }
   );
-  const [modifiedText, setModifiedText] = useLocalStorageState<string | null>(
+  const [modifiedText, setModifiedText] = useLocalStorageState<string>(
     "modifiedText",
     {
-      defaultValue: null,
+      defaultValue: "",
     }
   );
   const [leftHeaderWidth, setLeftHeaderWidth] = useState<number | null>(null);
 
+  const isServerRender = useIsServerRender();
+
   useEffect(() => {
+    if (isServerRender) {
+      return;
+    }
+
     // model must be one of the available models
     if (!models.includes(model)) {
       setModel(models[0]);
@@ -70,23 +88,16 @@ export default function HomePage() {
     if (!instructions.some((i) => i.key === instruction)) {
       setInstruction(instructions[0].key);
     }
-  }, [model, context, instruction]);
+  }, [isServerRender]);
 
   // Initialize the text in the editor
-  // https://github.com/astoilkov/use-local-storage-state/issues/56
-  const textInitialized = useRef(false);
   useEffect(() => {
-    if (
-      !textInitialized.current &&
-      editorRef.current !== null &&
-      originalText !== null &&
-      modifiedText !== null
-    ) {
-      editorRef.current?.getOriginalEditor().setValue(originalText);
-      editorRef.current?.getModifiedEditor().setValue(modifiedText);
-      textInitialized.current = true;
+    if (isServerRender) {
+      return;
     }
-  }, [editorRef.current, originalText, modifiedText]);
+    editorRef.current?.getOriginalEditor().setValue(originalText);
+    editorRef.current?.getModifiedEditor().setValue(modifiedText);
+  }, [isServerRender, editorRef.current]);
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
@@ -123,7 +134,7 @@ export default function HomePage() {
     if (completion && completion !== modifiedText) {
       editorRef.current?.getModifiedEditor().setValue(completion);
     }
-  }, [completion, modifiedText, setModifiedText]);
+  }, [completion]);
 
   const handleProofread = async () => {
     if (editorRef.current) {

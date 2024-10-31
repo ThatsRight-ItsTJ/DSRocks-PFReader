@@ -54,7 +54,7 @@ To run Waner Proofreader locally, ensure that you have Node.js installed on your
 # Credits
 
 - Some parts of the code & prompts are inspired by [refiner](https://github.com/imankulov/refiner)
-- Some prompts are inspired by [editGPT](https://editgpt.app/)
+- Some prompts are inspired by [editGPT](https://editgpt.app/?via=zhen)
 
 # Licenses
 

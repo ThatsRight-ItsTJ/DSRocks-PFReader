@@ -1,6 +1,6 @@
 # Waner Proofreader
 
-Waner Proofreader is an AI-powered tool designed to help non-native English speakers proofread their text effectively. Named after the historical figure 上官婉儿 (Shangguan Wan'er), a renowned Chinese poet and politician, this project aims to provide a smooth proofreading experience.
+Waner Proofreader is an AI-powered tool designed to help non-native English speakers proofread their text smoothly. The tool is named after the historical figure 上官婉儿 (Shangguan Wan'er), a renowned Chinese poet and politician.
 
 # Screenshots
 

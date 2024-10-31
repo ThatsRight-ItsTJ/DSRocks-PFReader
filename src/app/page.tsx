@@ -42,6 +42,7 @@ function useIsServerRender() {
 export default function HomePage() {
   const { theme } = useTheme();
 
+  const [editorMounted, setEditorMounted] = useState(false);
   const editorRef = useRef<MonacoDiffEditor | null>(null);
 
   const [model, setModel] = useLocalStorageState("model", {
@@ -88,16 +89,16 @@ export default function HomePage() {
     if (!instructions.some((i) => i.key === instruction)) {
       setInstruction(instructions[0].key);
     }
-  }, [isServerRender]);
+  }, [isServerRender]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Initialize the text in the editor
   useEffect(() => {
-    if (isServerRender) {
+    if (isServerRender || !editorMounted) {
       return;
     }
     editorRef.current?.getOriginalEditor().setValue(originalText);
     editorRef.current?.getModifiedEditor().setValue(modifiedText);
-  }, [isServerRender, editorRef.current]);
+  }, [isServerRender, editorMounted]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEditorDidMount = (editor: MonacoDiffEditor) => {
     editorRef.current = editor;
@@ -126,12 +127,15 @@ export default function HomePage() {
     editor.getOriginalEditor().onDidLayoutChange((layout) => {
       setLeftHeaderWidth(layout.width);
     });
+
+    setEditorMounted(true);
   };
 
   const { completion, complete, isLoading } = useCompletion();
 
   useEffect(() => {
-    if (completion && completion !== modifiedText) {
+    const currentModifiedText = editorRef.current?.getModifiedEditor().getValue();
+    if (completion && completion !== currentModifiedText) {
       editorRef.current?.getModifiedEditor().setValue(completion);
     }
   }, [completion]);

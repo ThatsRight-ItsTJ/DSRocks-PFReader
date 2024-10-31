@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { useRef, useEffect, useState } from "react";
+import useLocalStorageState from "use-local-storage-state";
 import { useCompletion } from "ai/react";
 import { useTheme } from "next-themes";
 import { Select, SelectItem, Card, CardBody, Link } from "@nextui-org/react";
@@ -19,30 +18,28 @@ import {
 
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import IconButton from "@/components/IconButton";
-const modelAtom = atomWithStorage("model", models[0]);
-const contextAtom = atomWithStorage("modelContext", contexts[0].key);
-const instructionAtom = atomWithStorage("instruction", instructions[0].key);
-const textOriginalEditorAtom = atomWithStorage<string | undefined>(
-  "textOriginalEditor",
-  undefined
-);
-const textModifiedEditorAtom = atomWithStorage<string | undefined>(
-  "textModifiedEditor",
-  undefined
-);
-const leftHeaderWidthAtom = atom<number | undefined>(undefined);
 
 export default function HomePage() {
   const { theme } = useTheme();
 
   const editorRef = useRef<MonacoDiffEditor | null>(null);
 
-  const [model, setModel] = useAtom(modelAtom);
-  const [context, setContext] = useAtom(contextAtom);
-  const [instruction, setInstruction] = useAtom(instructionAtom);
-  const [originalText, setOriginalText] = useAtom(textOriginalEditorAtom);
-  const [modifiedText, setModifiedText] = useAtom(textModifiedEditorAtom);
-  const [leftHeaderWidth, setLeftHeaderWidth] = useAtom(leftHeaderWidthAtom);
+  const [model, setModel] = useLocalStorageState("model", {
+    defaultValue: models[0],
+  });
+  const [context, setContext] = useLocalStorageState("context", {
+    defaultValue: contexts[0].key,
+  });
+  const [instruction, setInstruction] = useLocalStorageState("instruction", {
+    defaultValue: instructions[0].key,
+  });
+  const [originalText, setOriginalText] = useLocalStorageState("originalText", {
+    defaultValue: "",
+  });
+  const [modifiedText, setModifiedText] = useLocalStorageState("modifiedText", {
+    defaultValue: "",
+  });
+  const [leftHeaderWidth, setLeftHeaderWidth] = useState<number | null>(null);
 
   // model must be one of the available models
   if (!models.includes(model)) {
@@ -63,8 +60,8 @@ export default function HomePage() {
     editorRef.current = editor;
 
     // Set the initial content for the editors
-    editor.getOriginalEditor().setValue(originalText || "");
-    editor.getModifiedEditor().setValue(modifiedText || "");
+    editor.getOriginalEditor().setValue(originalText);
+    editor.getModifiedEditor().setValue(modifiedText);
 
     const handleOriginalContentChange = () => {
       const value = editor.getOriginalEditor().getValue();

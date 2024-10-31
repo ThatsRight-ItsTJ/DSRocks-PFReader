@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Provider as JotaiProvider } from "jotai";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ErrorBoundary } from "react-error-boundary";
@@ -20,15 +19,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className="antialiased">
-        <JotaiProvider>
-          <NextUIProvider>
-            <NextThemesProvider attribute="class" defaultTheme="dark">
-              <ErrorBoundary fallback={<div>Something went wrong</div>}>
-                {children}
-              </ErrorBoundary>
-            </NextThemesProvider>
-          </NextUIProvider>
-        </JotaiProvider>
+        <NextUIProvider>
+          <NextThemesProvider attribute="class" defaultTheme="dark">
+            <ErrorBoundary fallback={<div>Something went wrong</div>}>
+              {children}
+            </ErrorBoundary>
+          </NextThemesProvider>
+        </NextUIProvider>
       </body>
     </html>
   );

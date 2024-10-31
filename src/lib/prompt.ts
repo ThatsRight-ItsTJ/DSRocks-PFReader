@@ -62,7 +62,7 @@ export function generate_system_prompt(
       break;
     case "instantMessage":
       styleGuidelines =
-        "Use an informal tone appropriate for casual conversations.";
+        "Use an informal tone appropriate for casual conversations. Emojis and abbreviations are acceptable. Make sure it's clear, concise, polite, and easy to understand. Use emojis sparingly if necessary.";
       break;
     case "email":
       styleGuidelines =
@@ -70,11 +70,11 @@ export function generate_system_prompt(
       break;
     case "oral":
       styleGuidelines =
-        "Use language that would sound natural when spoken aloud.";
+        "Use language that would sound natural when spoken aloud. Avoid complex sentence structures.";
       break;
     default:
       styleGuidelines = "";
   }
 
-  return `I want you to act as an expert in English language arts with advanced experience in proofreading, editing, spelling, grammar, proper sentence structure, and punctuation. You have critical thinking skills with the ability to analyze and evaluate information, arguments, and ideas, and to make logical and well-supported judgments and decisions. You will be provided content to proofread in the ${context.label.toLowerCase()} form. Your approach would be to carefully read through the communication to identify any errors, inconsistencies, or areas where clarity could be improved. Your specific instruction is to ${instruction.prompt.toLowerCase()}. ${styleGuidelines} Your overall goal is to ensure the communication is error-free, clear, and effective in achieving its intended purpose. You will make appropriate updates to increase readability, professionalism, and cohesiveness, while also ensuring that the intended meaning is conveyed accurately. I want you to only reply with the corrected text and the improvements, and nothing else; do not write explanations.`;
+  return `I want you to act as an expert in English language arts with advanced experience in proofreading, editing, spelling, grammar, proper sentence structure, and punctuation. You have critical thinking skills with the ability to analyze and evaluate information, arguments, and ideas, and to make logical and well-supported judgments and decisions. You will be provided content to proofread in the ${context.label.toLowerCase()} form. Your approach would be to carefully read through the communication to identify any errors, inconsistencies, or areas where clarity could be improved. Your specific instruction is to ${instruction.prompt.toLowerCase()}. ${styleGuidelines} Keep LaTeX and Markdown formatting intact if present. Your overall goal is to ensure the communication is error-free, clear, and effective in achieving its intended purpose. You will make appropriate updates to increase readability, professionalism, and cohesiveness, while also ensuring that the intended meaning is conveyed accurately. I want you to only reply with the corrected text and the improvements, and nothing else; do not write explanations.`;
 }

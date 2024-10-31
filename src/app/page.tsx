@@ -12,6 +12,8 @@ import {
   Link,
   useDisclosure,
   NextUIProvider,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -91,11 +93,6 @@ export default function HomePage() {
   useEffect(() => {
     if (isServerRender) {
       return;
-    }
-
-    // model must be one of the available models
-    if (!models.includes(model)) {
-      setModel(models[0]);
     }
 
     // context must be one of the available contexts
@@ -194,19 +191,20 @@ export default function HomePage() {
                   <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between gap-4 mb-4">
                       <div className="flex items-center gap-4 flex-1">
-                        <Select
+                        <Autocomplete
+                          allowsCustomValue
                           label="Select a model"
-                          selectedKeys={[model]}
-                          onSelectionChange={(keys) =>
-                            keys?.currentKey &&
-                            setModel(keys.currentKey as string)
-                          }
-                          className="max-w-64"
+                          defaultItems={models.map((model) => ({ key: model }))}
+                          inputValue={model}
+                          onInputChange={(value) => setModel(value)}
+                          className="max-w-sm"
                         >
-                          {models.map((model) => (
-                            <SelectItem key={model}>{model}</SelectItem>
-                          ))}
-                        </Select>
+                          {(model) => (
+                            <AutocompleteItem key={model.key}>
+                              {model.key}
+                            </AutocompleteItem>
+                          )}
+                        </Autocomplete>
                         <Select
                           label="Select a context"
                           selectedKeys={[context]}

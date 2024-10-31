@@ -2,6 +2,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { generate_system_prompt } from "@/lib/prompt";
 import { NextRequest, NextResponse } from "next/server";
+import { models } from "@/lib/prompt";
 
 // Allow streaming responses up to 60 seconds
 export const maxDuration = 60;
@@ -33,6 +34,10 @@ export async function POST(req: NextRequest) {
   if (apiKeys.includes(apiKey)) {
     baseURL = process.env.OPENAI_BASE_URL!;
     openaiApiKey = process.env.OPENAI_API_KEY!;
+
+    if (!models.includes(model)) {
+      return new NextResponse("Invalid model", { status: 400 });
+    }
   } else {
     baseURL = endpoint;
     openaiApiKey = apiKey;

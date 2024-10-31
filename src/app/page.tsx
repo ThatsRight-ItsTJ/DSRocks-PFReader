@@ -65,14 +65,8 @@ export default function Home() {
     editorRef.current = editor;
 
     // Set the initial content for the editors
-    editor
-      .getOriginalEditor()
-      .getModel()
-      ?.setValue(originalText || "");
-    editor
-      .getModifiedEditor()
-      .getModel()
-      ?.setValue(modifiedText || "");
+    editor.getOriginalEditor().setValue(originalText || "");
+    editor.getModifiedEditor().setValue(modifiedText || "");
 
     const handleOriginalContentChange = () => {
       if (isInitializing.current || isUpdatingOriginalText.current) {

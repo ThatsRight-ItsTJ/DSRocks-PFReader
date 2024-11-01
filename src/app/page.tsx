@@ -278,14 +278,14 @@ export default function HomePage() {
             </div>
             <div className="flex items-center mb-4">
               <div
-                className="flex justify-center"
+                className="flex justify-center font-bold"
                 style={{
                   width: `${leftHeaderWidth ? leftHeaderWidth - 14 : "50%"}px`,
                 }}
               >
                 Original Text
               </div>
-              <div className="flex justify-center flex-1">Modified Text</div>
+              <div className="flex justify-center font-bold flex-1">Modified Text</div>
             </div>
             <div className="flex-grow">
               <DiffEditor

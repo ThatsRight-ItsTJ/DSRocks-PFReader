@@ -14,6 +14,10 @@ import {
   useDisclosure,
   Autocomplete,
   AutocompleteItem,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor, useMonaco } from "@monaco-editor/react";
 
@@ -255,19 +259,23 @@ export default function HomePage() {
                   proofreadError={proofreadError}
                   disclosure={settingDisclosure}
                 />
-                <IconButton
-                  tooltip={
-                    <div className="max-w-md">
-                      <h2 className="text-lg font-semibold text-center">
+                <Popover placement="bottom">
+                  <PopoverTrigger>
+                    <Button className="h-12 w-12" isIconOnly>
+                      <LightbulbIcon className="dark:invert h-7 w-7" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="px-1 py-2 max-w-md">
+                      <div className="text-lg font-bold text-center">
                         System Prompt
-                      </h2>
-                      <span className="text-sm">
+                      </div>
+                      <div className="text-sm">
                         {generate_system_prompt(context, instruction)}
-                      </span>
+                      </div>
                     </div>
-                  }
-                  icon={<LightbulbIcon className="dark:invert h-7 w-7" />}
-                />
+                  </PopoverContent>
+                </Popover>
                 <IconButton
                   tooltip="Proofread"
                   icon={<EditIcon className="dark:invert h-7 w-7" />}
@@ -285,7 +293,9 @@ export default function HomePage() {
               >
                 Original Text
               </div>
-              <div className="flex justify-center font-bold flex-1">Modified Text</div>
+              <div className="flex justify-center font-bold flex-1">
+                Modified Text
+              </div>
             </div>
             <div className="flex-grow">
               <DiffEditor

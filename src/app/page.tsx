@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useSyncExternalStore } from "react";
 import useLocalStorageState from "use-local-storage-state";
 import { useCompletion } from "ai/react";
+import { useTheme } from "next-themes";
 
 import {
   Select,
@@ -14,7 +15,7 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { DiffEditor, MonacoDiffEditor } from "@monaco-editor/react";
+import { DiffEditor, MonacoDiffEditor, useMonaco } from "@monaco-editor/react";
 
 import {
   EditIcon,
@@ -178,6 +179,15 @@ export default function HomePage() {
     }
   };
 
+  const { theme } = useTheme();
+
+  const monaco = useMonaco();
+  useEffect(() => {
+    if (editorMounted && monaco) {
+      monaco.editor.setTheme(theme === "dark" ? "vs-dark" : "vs");
+    }
+  }, [monaco, theme, editorMounted]);
+
   return (
     <div className="m-4 h-[96vh]">
       <Card className="h-full">
@@ -282,6 +292,7 @@ export default function HomePage() {
                 className="h-full"
                 language="plaintext"
                 options={{ originalEditable: true, wordWrap: "on" }}
+                theme={theme === "dark" ? "vs-dark" : "vs"}
                 onMount={handleEditorDidMount}
               />
             </div>

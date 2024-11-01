@@ -261,9 +261,12 @@ export default function HomePage() {
                 />
                 <Popover placement="bottom">
                   <PopoverTrigger>
-                    <Button className="h-12 w-12" isIconOnly>
-                      <LightbulbIcon className="dark:invert h-7 w-7" />
-                    </Button>
+                    <IconButton
+                      tooltip="System Prompt"
+                      className="h-12 w-12"
+                      icon={<LightbulbIcon className="dark:invert h-7 w-7" />}
+                      isIconOnly
+                    />
                   </PopoverTrigger>
                   <PopoverContent>
                     <div className="px-1 py-2 max-w-md">

@@ -14,27 +14,27 @@ export const contexts = [
 export const instructions = [
   {
     key: "basicProofread",
-    prompt: "Proofread this text",
+    prompt: "Proofreading the text",
   },
   {
     key: "awkwardParts",
-    prompt: "Fix only awkward parts",
+    prompt: "Fixing only awkward parts",
   },
   {
     key: "streamline",
-    prompt: "Streamline any awkward words or phrases",
+    prompt: "Streamlining any awkward words or phrases",
   },
   {
     key: "polish",
-    prompt: "Polish any awkward words or phrases",
+    prompt: "Polishing any awkward words or phrases",
   },
   {
     key: "trim",
-    prompt: "Trim the fat",
+    prompt: "Triming the fat",
   },
   {
     key: "clarityAndFlow",
-    prompt: "Improve clarity and flow",
+    prompt: "Improving clarity and flow",
   },
   {
     key: "significantClarityAndFlow",
@@ -57,35 +57,68 @@ export function generate_system_prompt(
     throw new Error("Invalid instruction key");
   }
 
+  const styleGuidelines: string[] = [];
+
   // Define style guidelines based on the context
-  let styleGuidelines = "";
   switch (context.key) {
     case "academic":
-      styleGuidelines =
-        "Ensure the language is formal and adheres to academic writing standards.";
+      styleGuidelines.push(
+        "Ensuring the language is formal and adheres to academic writing standards."
+      );
       break;
     case "general":
-      styleGuidelines = "Use a neutral tone appropriate for general audiences.";
+      styleGuidelines.push(
+        "Using a neutral tone appropriate for general audiences."
+      );
       break;
     case "instantMessage":
-      styleGuidelines =
-        "Use an informal tone appropriate for casual conversations. Emojis and abbreviations are acceptable. Make sure it's clear, concise, polite, and easy to understand. Use emojis sparingly if necessary.";
+      styleGuidelines.push(
+        ...[
+          "Using an informal tone appropriate for casual conversations.",
+          "Emojis and abbreviations are acceptable.",
+          "Making sure it's clear, concise, polite, and easy to understand.",
+          "Using emojis sparingly if necessary.",
+        ]
+      );
       break;
     case "email":
-      styleGuidelines =
-        "Employ a professional tone suitable for business emails.";
+      styleGuidelines.push(
+        "Employing a professional tone suitable for business emails."
+      );
       break;
     case "oral":
-      styleGuidelines =
-        "Use language that would sound natural when spoken aloud. Avoid complex sentence structures.";
+      styleGuidelines.push(
+        ...[
+          "Using language that would sound natural when spoken aloud.",
+          "Avoiding complex sentence structures.",
+        ]
+      );
       break;
     case "gitCommitMessage":
-      styleGuidelines =
-        "Treat provided text as a git commit message. Ensure it's formatted with a short summary line, followed by a blank line, followed by a more detailed description. Ensure that the summary line is less than 50 characters. Ensure that the lines in the description are less than 72 characters. Avoid using past tense, and use the imperative mood instead.";
+      styleGuidelines.push(
+        ...[
+          "Treating provided text as a git commit message.",
+          "Ensuring it's formatted with a short summary line, followed by a blank line, followed by a more detailed description.",
+          "Ensuring that the summary line is less than 50 characters.",
+          "Ensuring that the lines in the description are less than 72 characters.",
+          "Avoiding using past tense, and use the imperative mood instead.",
+        ]
+      );
       break;
     default:
-      styleGuidelines = "";
+      break;
   }
 
-  return `I want you to act as an expert in English language arts with advanced experience in proofreading, editing, spelling, grammar, proper sentence structure, and punctuation. You have critical thinking skills with the ability to analyze and evaluate information, arguments, and ideas, and to make logical and well-supported judgments and decisions. You will be provided content to proofread in the ${context.label.toLowerCase()} form. Your approach would be to carefully read through the communication to identify any errors, inconsistencies, or areas where clarity could be improved. Your specific instruction is to ${instruction.prompt.toLowerCase()}. ${styleGuidelines} Keep LaTeX and Markdown formatting intact if present. Your overall goal is to ensure the communication is error-free, clear, and effective in achieving its intended purpose. You will make appropriate updates to increase readability, professionalism, and cohesiveness, while also ensuring that the intended meaning is conveyed accurately. I want you to only reply with the corrected text and the improvements, and nothing else; do not write explanations.`;
+  styleGuidelines.push(instruction.prompt + ".");
+
+  return `As an expert in English language arts with advanced experience in proofreading, editing, spelling, grammar, proper sentence structure, and punctuation, your task is to ensure the given text is error-free, clear, and effective in achieving its intended purpose. You have critical thinking skills with the ability to analyze and evaluate information, arguments, and ideas, and to make logical and well-supported judgments and decisions.
+
+Your approach should involve:
+${styleGuidelines.map((guideline) => `- ${guideline}`).join("\n")}
+- Carefully reading through the communication to identify any errors, inconsistencies, or areas where clarity could be improved.
+- Keeping LaTeX and Markdown formatting intact if present.
+- Making appropriate updates to increase readability, professionalism, and cohesiveness.
+- Ensuring that the intended meaning is conveyed accurately.
+
+Reply only with the corrected text. Do not provide explanations.`;
 }

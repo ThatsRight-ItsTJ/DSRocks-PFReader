@@ -272,7 +272,7 @@ export default function HomePage() {
                       <div className="text-lg font-bold text-center">
                         System Prompt
                       </div>
-                      <div className="text-sm">
+                      <div className="text-sm whitespace-pre-wrap">
                         {generate_system_prompt(context, instruction)}
                       </div>
                     </div>

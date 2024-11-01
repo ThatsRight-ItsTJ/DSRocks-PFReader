@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } else {
-    baseURL = endpoint;
+    baseURL = endpoint || process.env.OPENAI_BASE_URL!;
     openaiApiKey = apiKey;
   }
 

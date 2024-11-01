@@ -245,7 +245,7 @@ export default function HomePage() {
                   href="https://github.com/AuroraDysis/waner-proofreader"
                   isExternal
                 />
-                <ThemeSwitcher editorMounted={editorMounted} />
+                <ThemeSwitcher />
                 <IconButton
                   tooltip="Settings"
                   icon={<SettingIcon className="dark:invert h-7 w-7" />}

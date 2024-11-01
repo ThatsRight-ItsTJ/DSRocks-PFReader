@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { LightModeIcon, DarkModeIcon } from "@/components/Icon";
 import IconButton from "@/components/IconButton";
 
-export function ThemeSwitcher({ editorMounted }: { editorMounted: boolean }) {
+export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
 
   return (

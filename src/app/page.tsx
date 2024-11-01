@@ -17,7 +17,6 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Button,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor, useMonaco } from "@monaco-editor/react";
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import CustomProvider from "@/components/CustomProvider";
 
 export const metadata: Metadata = {
   title: "Waner Proofreader",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <CustomProvider>{children}</CustomProvider>
+      </body>
     </html>
   );
 }

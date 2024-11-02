@@ -65,7 +65,7 @@ export function generate_system_prompt(
       styleGuidelines.push(
         ...[
           "Ensuring the language is formal and adheres to academic writing standards.",
-          "Abbreviations is acceptable.",
+          "Abbreviations are acceptable.",
         ]
       );
       break;

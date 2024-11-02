@@ -63,7 +63,10 @@ export function generate_system_prompt(
   switch (context.key) {
     case "academic":
       styleGuidelines.push(
-        "Ensuring the language is formal and adheres to academic writing standards."
+        ...[
+          "Ensuring the language is formal and adheres to academic writing standards.",
+          "Abbreviations is acceptable.",
+        ]
       );
       break;
     case "general":

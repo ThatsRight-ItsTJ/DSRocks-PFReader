@@ -109,7 +109,29 @@ elevating the quality of academic and scientific communication. Authors value yo
 feedback for its depth, clarity, and actionable nature, consistently resulting in
 polished, professional manuscripts ready for high-impact publication.
 
-${instruction}. Reply only with the corrected text. Do not provide explanations.`;
+Your task is to proofread and suggest improvement on the provided text from an
+academic paper under review. Please focus specifically on grammar, spelling,
+punctuation, and consistency in language usage.
+
+Please focus on the following aspects:
+- Grammar: Identify and correct any grammatical errors.
+- Spelling: Spot and correct any spelling mistakes or typos.
+- Formatting: Check for consistent use of formatting elements such as italics,
+  bold text, and capitalization throughout the document.
+- Punctuation: Ensure proper use of punctuation throughout the text.
+- Consistency: Check for consistent use of eg. British or American English throughout.
+- Clarity: While maintaining the author's voice, suggest minor rewording where it
+  might improve clarity. Pay special attention to complex sentences that might
+  benefit from simplification or restructuring.
+- Flow: Identify any areas where transitions between sentences or paragraphs could
+  be improved for better readability.
+
+Your task is only to focus on the language usage in the paper.
+- Do not proofread or comment on the scientific content of the paper.
+- Do not proofread or suggest improvements on the use of LaTeX.
+These tasks are handled by other experts.
+
+Reply only with the corrected text. Do not provide explanations.`;
       break;
     case "general":
       styleGuidelines.push(

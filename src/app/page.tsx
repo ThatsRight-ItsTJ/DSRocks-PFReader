@@ -232,6 +232,7 @@ export default function HomePage() {
                     keys?.currentKey && setInstruction(keys?.currentKey)
                   }
                   className="max-w-md"
+                  isDisabled={context === "academic"}
                 >
                   {instructions.map((instruction) => (
                     <SelectItem key={instruction.key}>

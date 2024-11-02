@@ -66,6 +66,9 @@ export function generate_system_prompt(
         ...[
           "Ensuring the language is formal and adheres to academic writing standards.",
           "Abbreviations are acceptable.",
+          "Don't remove the '%' symbol from the text in LaTeX format.",
+          "Treating the LaTeX equation as part of the text.",
+          "Ensuring punctuation marks are used correctly, especially in LaTeX equations.",
         ]
       );
       break;

@@ -126,10 +126,10 @@ Please focus on the following aspects:
 - Flow: Identify any areas where transitions between sentences or paragraphs could
   be improved for better readability.
 
-Please correct any LaTeX errors in the text so that it compiles as LaTeX without errors.
-- If there are unmatched curly braces, add/close curly braces as needed based on the context.
-- If there are unmatched environments (eg., \begin{itemize}), then open/close environments as needed based on the context.
-- If commands miss arguments, then fill in suitable dummy values. Eg. correct $1 \frac$ with $1 \frac{?}{?}$.
+Your task is only to focus on the language usage in the paper.
+- Do not proofread or comment on the scientific content of the paper.
+- Do not proofread or suggest improvements on the use of LaTeX.
+These tasks are handled by other experts.
 
 Reply only with the corrected text. Do not provide explanations.`;
       break;

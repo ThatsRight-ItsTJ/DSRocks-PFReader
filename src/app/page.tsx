@@ -17,6 +17,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  Textarea,
 } from "@nextui-org/react";
 import { DiffEditor, MonacoDiffEditor, useMonaco } from "@monaco-editor/react";
 
@@ -268,13 +269,18 @@ export default function HomePage() {
                     />
                   </PopoverTrigger>
                   <PopoverContent>
-                    <div className="px-1 py-2 max-w-md">
-                      <div className="text-lg font-bold text-center">
-                        System Prompt
-                      </div>
-                      <div className="text-sm whitespace-pre-wrap">
-                        {generate_system_prompt(context, instruction)}
-                      </div>
+                    <div className="min-w-96">
+                      <Textarea
+                        className="w-full h-full"
+                        label="System Prompt"
+                        minRows={16}
+                        maxRows={16}
+                        defaultValue={generate_system_prompt(
+                          context,
+                          instruction
+                        )}
+                        isReadOnly
+                      />
                     </div>
                   </PopoverContent>
                 </Popover>

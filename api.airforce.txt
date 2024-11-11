@@ -1,0 +1,60 @@
+Endpoints
+There are six main endpoints:
+
+/v1/chat/completions: Endpoint to send a prompt and receive a response from the specified LLM model.
+/chat/completions: Alias for /v1/chat/completions.
+/v1/models or /models: Endpoint to list all available models.
+/v1/imagine or /imagine: Endpoint to generate images.
+/v1/imagine2 or /imagine2: Endpoint to generate images fast and stable.
+/v1/ask or /ask: Endpoint to use the GlobalAsk API.
+/v1/images/vision or /images/vision: Endpoint to describe an image using specified vision models.
+/v1/suno or /suno: Endpoint to generate a song using suno.
+/get-audio: Endpoint to convert text to speech.
+OpenAI Compatible
+openai.base_url = 'https://api.airforce'
+LLM Models
+['openchat-3.5-0106', 'deepseek-coder-6.7b-base', 'deepseek-coder-6.7b-instruct', 'deepseek-math-7b-instruct', 'Nous-Hermes-2-Mixtral-8x7B-DPO', 'hermes-2-pro-mistral-7b', 'openhermes-2.5-mistral-7b', 'cosmosrp', 'lfm-40b-moe', 'discolm-german-7b-v1', 'falcon-7b-instruct', 'llama-2-7b-chat-int8', 'llama-2-7b-chat-fp16', 'neural-chat-7b-v3-1', 'phi-2', 'sqlcoder-7b-2', 'tinyllama-1.1b-chat', 'zephyr-7b-beta', 'any-uncensored', 'llama-3.1-70b-chat', 'llama-3.1-8b-chat', 'llama-3.1-70b-turbo', 'llama-3.1-8b-turbo', 'gpt-4o-mini', 'gpt-4o', 'gpt-4-turbo']
+
+Chat Completions Endpoint
+The /v1/chat/completions and /chat/completions endpoints are used to send a prompt to the specified LLM model and receive a response.
+
+Usage
+Send a POST request to /v1/chat/completions or /chat/completions with the following JSON payload:
+
+{
+    'model': 'claude-3-opus',
+    'messages': [
+        {'role': 'system', 'content': 'System prompt (only the first message, once)'},
+        {'role': 'user', 'content': 'Message content'},
+        {'role': 'assistant', 'content': 'Assistant response'}
+    ],
+    'max_tokens': 2048,
+    'stream': false,
+    'temperature': 0.7,
+    'top_p': 0.5,
+    'top_k': 0
+}
+Response Format
+The response will be in the following format:
+
+{
+    'id': 'chatcmpl-123',
+    'object': 'chat.completion',
+    'created': 1677652288,
+    'model': 'claude-3-opus',
+    'system_fingerprint': 'fp_44709d6fcb',
+    'choices': [{
+        'index': 0,
+        'message': {
+            'role': 'assistant',
+            'content': 'Response content'
+        },
+        'logprobs': null,
+        'finish_reason': 'stop'
+    }],
+    'usage': {
+        'prompt_tokens': 9,
+        'completion_tokens': 12,
+        'total_tokens': 21
+    }
+}
